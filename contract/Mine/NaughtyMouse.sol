@@ -143,6 +143,11 @@ contract NaughtyMouseNFT is ERC721Psi, Ownable {
         IsMinting = state;
     }
 
+    function withdrawMoney() external onlyOwner {
+        (bool success, ) = msg.sender.call{value: address(this).balance}("");
+        require(success, "Transfer failed");
+    }
+
     //---------------------------------------------------------------------------
 
     // 用于显示在OpenSea NFT首页的信息，例如：https://opensea.io/collection/azuki
