@@ -5,13 +5,14 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "erc721psi/contracts/ERC721Psi.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
-    error CallerIsContract();
-    error PublicMintIsNotBegin();
-    error ReachMaxSupply();
-    error MintMoreThanAllowed();
-    error NeedSendMoreETH();
-    error NotInWhiteList();
-    error MintStop();
+error CallerIsContract();
+error PublicMintIsNotBegin();
+error ReachMaxSupply();
+error MintMoreThanAllowed();
+error NeedSendMoreETH();
+error NotInWhiteList();
+error MintStop();
+error NoMoreBalance();
 
 /**
  @author DAO Labs
@@ -144,7 +145,11 @@ contract NaughtyMouseNFT is ERC721Psi, Ownable {
     }
 
     function withdrawMoney() external onlyOwner {
-        (bool success, ) = msg.sender.call{value: address(this).balance}("");
+        if (address(this).balance <= 0) {
+            revert NoMoreBalance();
+        }
+        uint256 curBalance = address(this).balance;
+        (bool success, ) = msg.sender.call{value: curBalance}("");
         require(success, "Transfer failed");
     }
 
@@ -153,7 +158,7 @@ contract NaughtyMouseNFT is ERC721Psi, Ownable {
     // 用于显示在OpenSea NFT首页的信息，例如：https://opensea.io/collection/azuki
     function contractURI() public pure returns (string memory) {
         return
-        "https://dometa_nft.json";
+        "https://NaughtyMouse.json";
     }
 
     // 用于返回NFT的元数据信息
@@ -161,7 +166,7 @@ contract NaughtyMouseNFT is ERC721Psi, Ownable {
         uint256 randomIndex = index;
         string memory randomIndexString = Strings.toString(randomIndex);
         string
-        memory headerString = "https://raw.githubusercontent.com/CheersPals/cheerspalsofficial/main/json/";
+        memory headerString = "https://xxx";
         string memory footerString = ".json";
         string memory tokenURI = string.concat(
             headerString,
