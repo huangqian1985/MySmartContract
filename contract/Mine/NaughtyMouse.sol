@@ -145,10 +145,8 @@ contract NaughtyMouseNFT is ERC721Psi, Ownable {
     }
 
     function withdrawMoney() external onlyOwner {
-        if (address(this).balance <= 0) {
-            revert NoMoreBalance();
-        }
         uint256 curBalance = address(this).balance;
+        require(curBalance > 0, "No ether left to withdraw");
         (bool success, ) = msg.sender.call{value: curBalance}("");
         require(success, "Transfer failed");
     }
