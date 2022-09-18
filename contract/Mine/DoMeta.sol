@@ -1,77 +1,97 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.12;
 
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "erc721psi/contracts/ERC721Psi.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
-contract DoMetaNFT is ERC721URIStorage {
-    using Counters for Counters.Counter;
-    Counters.Counter private _tokenIds;
+    error CallerIsContract();
 
-    address owner;
+/**
+ @author DoMeta Labs
+ @title DoMeta NFT
+ */
+contract DoMetaNFT is ERC721Psi, Ownable {
 
-    uint MintMaxTotal = 666;
-    uint MintMaxCount = 5;
-    uint MintMinCount = 1;
+    uint256 public immutable MintMaxTotal;
+
+    mapping(address => uint256) public _numberMinted;
+
+    uint256 public publicMintStartTime = 0xFFFFFFFF;
+
+    uint256 public constant MINT_PRICE = 0.001 ether;
+
+    uint256 public constant MintMaxCount = 5;
 
     // 默克尔树root
-    bytes32 public root = 0x9508de33d89ea988d78c623e14f7b0f8ec6cd2900ea5bfcb876ceb4860fb4b21;
+    bytes32 public whiteListRoot = 0x0;
 
-    bool IsMinting = true;
+    bool public IsMinting = true;
 
-    constructor() ERC721("DoMeta NFT", "DoMeta") {
-        owner = msg.sender;
-        _tokenIds.increment();  // tokenId 从1开始，减少gas费
+    constructor(uint256 mintMaxSize_) ERC721Psi("DoMeta NFT", "DoMeta") {
+        MintMaxTotal = mintMaxSize_;
     }
 
-    function mint(address player) private returns (uint256) {
-        require(IsMinting, "Mint is Stop!");
-        uint256 newItemId = _tokenIds.current();
-        string memory tokenURI = getTokenURI(newItemId);
-        require(MintMaxTotal >= newItemId, "Mint MaxCount overflow!");
-        _mint(player, newItemId);
-        _setTokenURI(newItemId, tokenURI);
-        _tokenIds.increment();
-        return newItemId;
-    }
-
-    // 合约拥有者mint，没有数量限制
-    function mintByOwner(uint times) external byOwner {
-        for (uint key = 0; key < times; key++) {
-            mint(owner);
+    modifier callerIsUser() {
+        if (tx.origin != msg.sender) {
+            revert CallerIsContract();
         }
+        _;
     }
 
-    // 白名单mint
-    function mintWhiteLists(address player, bytes32[] memory proof) external {
-        require(isWhiteLists(proof, keccak256(abi.encodePacked(player))));
-        mint(player);
+    function ownerMint(uint256 quantity) external onlyOwner {
+        require (totalSupply() + quantity <= MintMaxTotal, "ReachMaxSupply");
+        _numberMinted[msg.sender] += quantity;
+        _safeMint(msg.sender, quantity);
     }
 
-    // 设置最大mint数量
-    function setMintTotal(uint count) external byOwner {
-        MintMaxTotal = count;
+    function whiteListMint(uint256 quantity, bytes32[] memory proof) public callerIsUser {
+        require (IsMinting, "Mint is Stop");
+        require (totalSupply() + quantity <= MintMaxTotal, "Reach MaxSupply");
+        require (isWhiteList(proof, keccak256(abi.encodePacked(msg.sender))), "Not In WhiteList");
+        require (numberMinted(msg.sender) + quantity <= MintMaxCount, "Mint More Than Allowed");
+
+        _numberMinted[msg.sender] += quantity;
+        _safeMint(msg.sender, quantity);
     }
 
-    // 设置mint状态
-    function checkoutMintState(bool state) external byOwner {
-        IsMinting = state;
+    function publicMint(uint256 quantity) external payable callerIsUser {
+        require (IsMinting, "Mint is Stop");
+        require (isPublicMintOn(), "PublicMint Is Not Begin");
+        require (totalSupply() + quantity <= MintMaxTotal, "Reach MaxSupply");
+        require (msg.value >= MINT_PRICE * quantity, "Need Send More ETH");
+        require (numberMinted(msg.sender) + quantity <= MintMaxCount, "Mint More Than Allowed");
+
+        _numberMinted[msg.sender] += quantity;
+        _safeMint(msg.sender, quantity);
     }
 
-    // 设置默克尔树root(白名单变化时重新设置)
-    function setMerkleTreeRoot(bytes32 _root) external byOwner {
-        root = _root;
+    function isPublicMintOn() public view returns (bool) {
+        return block.timestamp >= publicMintStartTime;
     }
 
-    // 白名单判断
-    function isWhiteLists(bytes32[] memory proof, bytes32 leaf)
+    function isWhiteList(bytes32[] memory proof, bytes32 leaf)
         private
         view
         returns (bool)
     {
-        return MerkleProof.verify(proof, root, leaf);
+        return MerkleProof.verify(proof, whiteListRoot, leaf);
+    }
+
+    function numberMinted(address minter) public view returns (uint256) {
+        return _numberMinted[minter];
+    }
+
+    function setPublicMintStartTime(uint256 startTime) external onlyOwner {
+        publicMintStartTime = startTime;
+    }
+
+    function setMerkleTreeRoot(bytes32 _root) external onlyOwner {
+        whiteListRoot = _root;
+    }
+
+    function setMintState(bool state) external onlyOwner {
+        IsMinting = state;
     }
 
     // 用于显示在OpenSea NFT首页的信息，例如：https://opensea.io/collection/azuki
@@ -92,11 +112,5 @@ contract DoMetaNFT is ERC721URIStorage {
             footerString
         );
         return tokenURI;
-    }
-
-    // 合约拥有者修饰
-    modifier byOwner() {
-        require(msg.sender == owner, "Must be owner!");
-        _;
     }
 }

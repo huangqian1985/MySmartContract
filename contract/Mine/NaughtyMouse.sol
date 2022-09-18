@@ -175,6 +175,7 @@ contract NaughtyMouseNFT is ERC721Psi, Ownable {
         if (totalSupply() + quantity > MintMaxSize) {
             revert ReachMaxSupply();
         }
+        _numberMinted[msg.sender] += quantity;
         _safeMint(msg.sender, quantity);
     }
 
