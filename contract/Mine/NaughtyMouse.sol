@@ -196,9 +196,9 @@ contract NaughtyMouseNFT is ERC721Psi, Ownable {
     }
 
     function getWhiteListType(bytes32[] memory proof, bytes32 leaf)
-    private
-    view
-    returns (WhiteListType)
+        private
+        view
+        returns (WhiteListType)
     {
         if ( MerkleProof.verify(proof, devWhiteListRoot, leaf) ) {
             return WhiteListType.DEV;
@@ -222,7 +222,6 @@ contract NaughtyMouseNFT is ERC721Psi, Ownable {
 //        require(success, "Transfer failed");
 //    }
 
-
     /*
         withdraw function start
     */
@@ -231,23 +230,23 @@ contract NaughtyMouseNFT is ERC721Psi, Ownable {
 
         withDrawList.push(
             WithDrawInfo({
-        to: _to,
-        value: _value,
-        data: _data,
-        executed: false,
-        numConfirmations: 0
-        })
+                to: _to,
+                value: _value,
+                data: _data,
+                executed: false,
+                numConfirmations: 0
+            })
         );
 
         emit SubmitWithDraw(msg.sender, index, _to, _value, _data);
     }
 
     function confirmWithDraw(uint _index)
-    public
-    onlyConfirmer
-    withDrawExists(_index)
-    notExecuted(_index)
-    notConfirmed(_index)
+        public
+        onlyConfirmer
+        withDrawExists(_index)
+        notExecuted(_index)
+        notConfirmed(_index)
     {
         WithDrawInfo storage withDraw = withDrawList[_index];
         withDraw.numConfirmations += 1;
@@ -257,10 +256,10 @@ contract NaughtyMouseNFT is ERC721Psi, Ownable {
     }
 
     function executeWithDraw(uint _index)
-    public
-    onlyConfirmer
-    withDrawExists(_index)
-    notExecuted(_index)
+        public
+        onlyConfirmer
+        withDrawExists(_index)
+        notExecuted(_index)
     {
         uint256 curBalance = address(this).balance;
         require(curBalance > 0, "No ether left to withdraw");
@@ -285,10 +284,10 @@ contract NaughtyMouseNFT is ERC721Psi, Ownable {
     }
 
     function revokeConfirmation(uint _index)
-    public
-    onlyConfirmer
-    withDrawExists(_index)
-    notExecuted(_index)
+        public
+        onlyConfirmer
+        withDrawExists(_index)
+        notExecuted(_index)
     {
         WithDrawInfo storage withDraw = withDrawList[_index];
 
@@ -305,15 +304,15 @@ contract NaughtyMouseNFT is ERC721Psi, Ownable {
     }
 
     function getWithDrawInfo(uint _index)
-    public
-    view
-    returns (
-        address to,
-        uint value,
-        bytes memory data,
-        bool executed,
-        uint numConfirmations
-    )
+        public
+        view
+        returns (
+            address to,
+            uint value,
+            bytes memory data,
+            bool executed,
+            uint numConfirmations
+        )
     {
         WithDrawInfo storage withDraw = withDrawList[_index];
 
