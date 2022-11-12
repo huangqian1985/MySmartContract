@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.12;
 
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "erc721psi/contracts/ERC721Psi.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
@@ -12,15 +13,12 @@ error NeedSendMoreETH();
 error NotInWhiteList();
 error MintStop();
 error NoMoreBalance();
-error NotOwner();
 
 /**
  @author DAO Labs
  @title NaughtyMouse NFT
  */
-contract NaughtyMouseNFT is ERC721Psi {
-    address private _owner;
-
+contract NaughtyMouseNFT is ERC721Psi, Ownable {
     mapping(address => uint256) public _numberMinted;
 
     uint256 public publicMintStartTime = 0xFFFFFFFF;
@@ -37,16 +35,13 @@ contract NaughtyMouseNFT is ERC721Psi {
     bytes32 public devWhiteListRoot = 0x0;
     bytes32 public normalWhiteListRoot = 0x0;
 
-    // event
-    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
-
     enum WhiteListType {
         NONE,
         DEV,
         NORMAL
     }
 
-    constructor(uint256 mintMaxSize_) ERC721Psi("Naughty Hamster NFT", "Naughty Hamster") {
+    constructor(uint256 mintMaxSize_) ERC721Psi("NaughtyMouse NFT", "NaughtyMouse") {
         MintMaxSize = mintMaxSize_;
     }
 
@@ -55,23 +50,6 @@ contract NaughtyMouseNFT is ERC721Psi {
             revert CallerIsContract();
         }
         _;
-    }
-
-    modifier onlyOwner() {
-        if (owner() != msg.sender) {
-            revert NotOwner();
-        _;
-    }
-
-    function owner() public view virtual returns (address) {
-        return _owner;
-    }
-
-    function transferOwnership(address newOwner) public virtual onlyOwner {
-        require(newOwner != address(0), "Ownable: new owner is the zero address");
-        address oldOwner = _owner;
-        _owner = newOwner;
-        emit OwnershipTransferred(oldOwner, newOwner);
     }
 
     function whiteListMint(uint256 quantity, bytes32[] memory proof) public callerIsUser {
@@ -172,8 +150,6 @@ contract NaughtyMouseNFT is ERC721Psi {
         (bool success, ) = msg.sender.call{value: curBalance}("");
         require(success, "Transfer failed");
     }
-
-
 
     //---------------------------------------------------------------------------
 
