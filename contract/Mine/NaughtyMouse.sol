@@ -16,9 +16,9 @@ error NoMoreBalance();
 
 /**
  @author DAO Labs
- @title NaughtyMouse NFT
+ @title NaughtyHamster NFT
  */
-contract NaughtyMouseNFT is ERC721Psi, Ownable {
+contract NaughtyHamsterNFT is ERC721Psi, Ownable {
     mapping(address => uint256) public _numberMinted;
 
     uint256 public publicMintStartTime = 0xFFFFFFFF;
@@ -41,7 +41,7 @@ contract NaughtyMouseNFT is ERC721Psi, Ownable {
         NORMAL
     }
 
-    constructor(uint256 mintMaxSize_) ERC721Psi("NaughtyMouse NFT", "NaughtyMouse") {
+    constructor(uint256 mintMaxSize_) ERC721Psi("Naughty Hamster NFT", "Naughty Hamster") {
         MintMaxSize = mintMaxSize_;
     }
 
@@ -156,7 +156,7 @@ contract NaughtyMouseNFT is ERC721Psi, Ownable {
     // 用于显示在OpenSea NFT首页的信息，例如：https://opensea.io/collection/azuki
     function contractURI() public pure returns (string memory) {
         return
-        "https://NaughtyMouse.json";
+        "https://NaughtyHamster.json";
     }
 
     // 用于返回NFT的元数据信息
