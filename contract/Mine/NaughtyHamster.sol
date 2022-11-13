@@ -151,20 +151,12 @@ contract NaughtyHamsterNFT is ERC721Psi, Ownable {
         require(success, "Transfer failed");
     }
 
-    //---------------------------------------------------------------------------
-
-    // 用于显示在OpenSea NFT首页的信息，例如：https://opensea.io/collection/azuki
-    function contractURI() public pure returns (string memory) {
-        return
-        "https://NaughtyHamster.json";
-    }
-
     // 用于返回NFT的元数据信息
     function getTokenURI(uint256 index) private pure returns (string memory) {
         uint256 randomIndex = index;
-        string memory randomIndexString = Strings.toString(randomIndex);
+        string memory randomIndexString = Strings.toString(randomIndex%10);
         string
-        memory headerString = "https://xxx";
+        memory headerString = "ipfs://bafybeido2aflzh4a3hhp2iictnh4nohwzxcruhjb5xdpp4vghjnw4cujdu/meta/";
         string memory footerString = ".json";
         string memory tokenURI = string.concat(
             headerString,
