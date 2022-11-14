@@ -5,14 +5,15 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "erc721psi/contracts/ERC721Psi.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
-error CallerIsContract();
-error PublicMintIsNotBegin();
-error ReachMaxSupply();
-error MintMoreThanAllowed();
-error NeedSendMoreETH();
-error NotInWhiteList();
-error MintStop();
-error NoMoreBalance();
+    error CallerIsContract();
+    error PublicMintIsNotBegin();
+    error ReachMaxSupply();
+    error MintMoreThanAllowed();
+    error NeedSendMoreETH();
+    error NotInWhiteList();
+    error MintStop();
+    error NoMoreBalance();
+    error TokenNotExistent();
 
 /**
  @author DAO Labs
@@ -104,6 +105,7 @@ contract NaughtyHamsterNFT is ERC721Psi, Ownable {
         if (totalSupply() + quantity > MintMaxSize) {
             revert ReachMaxSupply();
         }
+        _numberMinted[msg.sender] += quantity;
         _safeMint(msg.sender, quantity);
     }
 
@@ -151,18 +153,28 @@ contract NaughtyHamsterNFT is ERC721Psi, Ownable {
         require(success, "Transfer failed");
     }
 
-    // 用于返回NFT的元数据信息
-    function getTokenURI(uint256 index) private pure returns (string memory) {
-        uint256 randomIndex = index;
+    function _baseURI() internal view virtual override returns (string memory) {
+        return "ipfs://bafybeido2aflzh4a3hhp2iictnh4nohwzxcruhjb5xdpp4vghjnw4cujdu/meta/";
+    }
+
+    function tokenURI(uint256 tokenId)
+    public
+    view
+    override(ERC721Psi)
+    returns (string memory)
+    {
+        if (!_exists(tokenId)) {
+            revert TokenNotExistent();
+        }
+
+        uint256 randomIndex = tokenId;
         string memory randomIndexString = Strings.toString(randomIndex%10);
-        string
-        memory headerString = "ipfs://bafybeido2aflzh4a3hhp2iictnh4nohwzxcruhjb5xdpp4vghjnw4cujdu/meta/";
         string memory footerString = ".json";
-        string memory tokenURI = string.concat(
-            headerString,
+        string memory URI = string.concat(
             randomIndexString,
             footerString
         );
-        return tokenURI;
+
+        return string(abi.encodePacked(_baseURI(), URI));
     }
 }
