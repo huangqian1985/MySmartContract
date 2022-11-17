@@ -23,6 +23,7 @@ contract NaughtyHamsterNFT is ERC721Psi, Ownable {
     mapping(address => uint256) public _numberMinted;
 
     uint256 public publicMintStartTime = 0xFFFFFFFF;
+    uint256 public openBoxTime = 0xFFFFFFFF;
 
     uint256 public constant MINT_PRICE = 0.001 ether;
 
@@ -121,6 +122,14 @@ contract NaughtyHamsterNFT is ERC721Psi, Ownable {
         publicMintStartTime = startTime;
     }
 
+    function setOpenBoxTime(uint256 openTime) external onlyOwner {
+        openBoxTime = openTime;
+    }
+
+    function isOpenBoxTime() public view returns (bool) {
+        return block.timestamp >= openBoxTime;
+    }
+
     function setMerkleTreeRoot(bytes32 _devRoot, bytes32 _normalRoot) external onlyOwner {
         devWhiteListRoot = _devRoot;
         normalWhiteListRoot = _normalRoot;
@@ -165,6 +174,10 @@ contract NaughtyHamsterNFT is ERC721Psi, Ownable {
     {
         if (!_exists(tokenId)) {
             revert TokenNotExistent();
+        }
+
+        if (!isOpenBoxTime()) {
+            return "ipfs://bafkreiditbj4a536ibwurs6b4x45iyqnd4v6w5h5j42h4lehppgwy5gsfe";
         }
 
         uint256 randomIndex = tokenId;
