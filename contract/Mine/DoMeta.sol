@@ -5,7 +5,8 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "erc721psi/contracts/ERC721Psi.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
-    error CallerIsContract();
+error CallerIsContract();
+error TokenNotExistent();
 
 /**
  @author DoMeta Labs
@@ -94,23 +95,29 @@ contract DoMetaNFT is ERC721Psi, Ownable {
         IsMinting = state;
     }
 
-    // 用于显示在OpenSea NFT首页的信息，例如：https://opensea.io/collection/azuki
-    function contractURI() public pure returns (string memory) {
-        return
-            "https://dometa_nft.json";
+
+    function _baseURI() internal view virtual override returns (string memory) {
+        return "ipfs://xxx/meta/";
     }
 
-    // 用于返回NFT的元数据信息
-    function getTokenURI(uint256 index) private pure returns (string memory) {
-        string memory indexString = Strings.toString(index);
-        string
-            memory headerString = "https://xxx/";
+    function tokenURI(uint256 tokenId)
+    public
+    view
+    override(ERC721Psi)
+    returns (string memory)
+    {
+        if (!_exists(tokenId)) {
+            revert TokenNotExistent();
+        }
+
+        uint256 randomIndex = tokenId;
+        string memory randomIndexString = Strings.toString(randomIndex%10);
         string memory footerString = ".json";
-        string memory tokenURI = string.concat(
-            headerString,
-            indexString,
+        string memory URI = string.concat(
+            randomIndexString,
             footerString
         );
-        return tokenURI;
+
+        return string(abi.encodePacked(_baseURI(), URI));
     }
 }
