@@ -41,8 +41,8 @@ var (
 
 const (
 	NFTName        = "Naughty Hamster #"
-	NFTIPFSURLBase = "ipfs://xxx/img/"
-	pngPath        = "C:\\Users\\黄骞\\OneDrive\\桌面\\Pic"
+	NFTIPFSURLBase = "ipfs://bafybeigir73hn3pmqpvmohpuxfaicfkseypmhsf6yxcuftoxg5hckmr2ve/png/"
+	pngPath        = "C:\\Users\\Administrator\\Desktop\\png"
 	csvPath        = "src/metadata.csv"
 	jsonOutputPath = "output/json/"
 	csvParamCount  = 11
@@ -50,37 +50,61 @@ const (
 
 func genMetaJsonWithPng() {
 	list, _ := gfile.ScanDirFile(pngPath, "*.png", false)
-	for _, v := range list {
+	for index, v := range list {
 		if pngData, exist := csvDataMap[gconv.Int(gfile.Name(v))]; exist {
-			genJsonWithPNGData(pngData)
+			genJsonWithPNGData(pngData, index)
 		} else {
 			fmt.Println(v, "is not exist")
 		}
 	}
 }
 
-func genJsonWithPNGData(pngData CSVData) {
+func genJsonWithPNGData(pngData CSVData, index int) {
 	jsonData := MetaJsonData{}
-	jsonData.Name = NFTName + fmt.Sprintf("%04d", pngData.ID)
-	jsonData.Desc = "Test Desc"
+	jsonData.Name = NFTName + fmt.Sprintf("%d", index)
+	jsonData.Desc = "Naughty Hamster is the 1st generation of Naughty Group which take aims at building an IP universe."
 	jsonData.Image = NFTIPFSURLBase + fmt.Sprintf("%04d.png", pngData.ID)
 	var attributeList []AttributeData
-	attributeList = append(attributeList, AttributeData{TraitType: "BackGround", Value: pngData.BackGround})
-	attributeList = append(attributeList, AttributeData{TraitType: "Back", Value: pngData.Back})
-	attributeList = append(attributeList, AttributeData{TraitType: "Mount", Value: pngData.Mount})
-	attributeList = append(attributeList, AttributeData{TraitType: "Body", Value: pngData.Body})
-	attributeList = append(attributeList, AttributeData{TraitType: "Clothing", Value: pngData.Clothing})
-	attributeList = append(attributeList, AttributeData{TraitType: "Face", Value: pngData.Face})
-	attributeList = append(attributeList, AttributeData{TraitType: "Eyes", Value: pngData.Eyes})
-	attributeList = append(attributeList, AttributeData{TraitType: "Head", Value: pngData.Head})
-	attributeList = append(attributeList, AttributeData{TraitType: "RightHand", Value: pngData.RightHand})
-	attributeList = append(attributeList, AttributeData{TraitType: "LeftHand", Value: pngData.LeftHand})
+	if pngData.BackGround != "none" {
+		attributeList = append(attributeList, AttributeData{TraitType: "BackGround", Value: pngData.BackGround})
+	}
+	if pngData.Back != "none" {
+		attributeList = append(attributeList, AttributeData{TraitType: "Back", Value: pngData.Back})
+	}
+	if pngData.Mount != "none" {
+		attributeList = append(attributeList, AttributeData{TraitType: "Mount", Value: pngData.Mount})
+	}
+	if pngData.Body != "none" {
+		attributeList = append(attributeList, AttributeData{TraitType: "Body", Value: pngData.Body})
+	}
+	if pngData.Clothing != "none" {
+		attributeList = append(attributeList, AttributeData{TraitType: "Clothing", Value: pngData.Clothing})
+	}
+	if pngData.Face != "none" {
+		attributeList = append(attributeList, AttributeData{TraitType: "Face", Value: pngData.Face})
+	}
+	if pngData.Eyes != "none" {
+		attributeList = append(attributeList, AttributeData{TraitType: "Eyes", Value: pngData.Eyes})
+	}
+	if pngData.Head != "none" {
+		attributeList = append(attributeList, AttributeData{TraitType: "Head", Value: pngData.Head})
+	}
+	if pngData.RightHand != "none" {
+		attributeList = append(attributeList, AttributeData{TraitType: "RightHand", Value: pngData.RightHand})
+	}
+	if pngData.LeftHand != "none" {
+		attributeList = append(attributeList, AttributeData{TraitType: "LeftHand", Value: pngData.LeftHand})
+	}
 	jsonData.Attributes = attributeList
 
 	b, _ := json.Marshal(jsonData)
 
-	outputFile := jsonOutputPath + fmt.Sprintf("%04d.json", pngData.ID)
+	outputFile := jsonOutputPath + fmt.Sprintf("%d.json", index)
 	gfile.PutBytes(outputFile, b)
+
+	if pngData.ID%1000 == 999 {
+		fmt.Println(pngData.ID, index)
+	}
 }
 
 func loadCSV() {
