@@ -22,10 +22,12 @@ import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 contract NaughtyHamsterNFT is ERC721Psi, Ownable {
     mapping(address => uint256) public _numberMinted;
 
+    address public withDrawAddr = 0xb67A775281a631fE37B886FBB6F7dA6613BC96F2;
+
     uint256 public publicMintStartTime = 0xFFFFFFFF;
     uint256 public openBoxTime = 0xFFFFFFFF;
 
-    uint256 public constant MINT_PRICE = 0.001 ether;
+    uint256 public constant MINT_PRICE = 0.01 ether;
 
     uint256 public constant DevWhiteListMintMaxCount = 10;
     uint256 public constant NormalWhiteListMintMaxCount = 1;
@@ -158,12 +160,12 @@ contract NaughtyHamsterNFT is ERC721Psi, Ownable {
     function withdrawMoney() external onlyOwner {
         uint256 curBalance = address(this).balance;
         require(curBalance > 0, "No ether left to withdraw");
-        (bool success, ) = msg.sender.call{value: curBalance}("");
+        (bool success, ) = withDrawAddr.call{value: curBalance}("");
         require(success, "Transfer failed");
     }
 
     function _baseURI() internal view virtual override returns (string memory) {
-        return "ipfs://bafybeier56sik2sutzqcx7gr43d2u66kzbhzq5j7k7xktrdrbnlbpiuhqu/meta/";
+        return "ipfs://bafybeidzr7ae6vgobzouk4z6a2xavilbpb4ffbohqihf6zbglal4hg6zzm/json/";
     }
 
     function tokenURI(uint256 tokenId)
@@ -177,14 +179,12 @@ contract NaughtyHamsterNFT is ERC721Psi, Ownable {
         }
 
         if (!isOpenBoxTime()) {
-            return "ipfs://bafkreiditbj4a536ibwurs6b4x45iyqnd4v6w5h5j42h4lehppgwy5gsfe";
+            return "ipfs://bafybeiffv2fepn4m6k343nzsnwjplx25jzlsnkov5paymt37r4foll3b6y";
         }
 
-        uint256 randomIndex = tokenId;
-        string memory randomIndexString = Strings.toString(randomIndex%10);
         string memory footerString = ".json";
         string memory URI = string.concat(
-            randomIndexString,
+            Strings.toString(tokenId),
             footerString
         );
 
