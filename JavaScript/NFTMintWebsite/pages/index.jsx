@@ -9,7 +9,7 @@ const keccak256 = require('keccak256')
 
 export default function Home() {
     // Contract Address & ABI
-    const contractAddress = "0x2Bc2Cbcd45E4CcecfD6D2998c80aaBD4485705F2";
+    const contractAddress = "0x0CD057EC2f2D56b0A8d4881022Bf409d1Cc129Ba";
     const contractABI = abi.abi;
 
     // Component state
@@ -72,6 +72,33 @@ export default function Home() {
         } catch (error) {
             console.log(error);
         }
+    }
+
+    const disconnectWallet = async () => {
+        setCurrentAccount("");
+    }
+
+    const progress = async () => {
+        try {
+            const {ethereum} = window;
+      
+            if (ethereum) {
+              const provider = new ethers.providers.Web3Provider(ethereum, "any");
+              const signer = provider.getSigner();
+              const mintContract = new ethers.Contract(
+                contractAddress,
+                contractABI,
+                signer
+              );
+  
+              const totalSupply = await mintContract.totalSupply();
+              const mintMaxSize = await mintContract.MintMaxSize();
+
+              console.log("totalSupply:" + totalSupply + ", mintMaxSize:" + mintMaxSize)
+            }
+          } catch (error) {
+            console.log(error);
+          }
     }
 
     const devWhiteListMint = async () => {
@@ -164,6 +191,7 @@ export default function Home() {
 
     return (
         <div className={styles.container}>
+
             <Head>
                 <title>NaughtyHamster Mint</title>
                 <meta name="description" content="Tipping site" />
@@ -205,6 +233,26 @@ export default function Home() {
                                     onClick={publicMint}
                                 >
                                     付费mint(0.001ETH)
+                                </button>
+                            </div>       
+                            <br />
+
+                            <div>
+                                <button
+                                    type="button"
+                                    onClick={progress}
+                                >
+                                    查看进度
+                                </button>
+                            </div>       
+                            <br />
+
+                            <div>
+                                <button
+                                    type="button"
+                                    onClick={disconnectWallet}
+                                >
+                                    登出
                                 </button>
                             </div>       
                             <br />
