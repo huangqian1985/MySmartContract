@@ -16,7 +16,7 @@ import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
     error TokenNotExistent();
 
 /**
- @author DAO Labs
+ @author Naughty Group
  @title NaughtyHamster NFT
  */
 contract NaughtyHamsterNFT is ERC721Psi, Ownable {
