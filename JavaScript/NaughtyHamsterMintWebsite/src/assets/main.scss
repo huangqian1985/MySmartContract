@@ -1,0 +1,62 @@
+html {
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: "Exo2-SemiBold";
+    #app {
+      position: relative;
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      a {
+        text-decoration: none;
+        color: #000000;
+      }
+
+      /* 自定义样式 */
+      .panel-bg {
+        background: #FDF8F8;
+        position: relative;
+        border: 10px solid #000000;
+        border-radius: 30px;
+        > * {
+          position: relative;
+        }
+        &::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          right: 0;
+          left: 0;
+          bottom: 0;
+          border: 10px solid transparent;
+          border-radius: 20px;
+          background-clip: padding-box, border-box;
+          background-origin: padding-box, border-box;
+          background-image: linear-gradient(to right, #FDF8F8, #FDF8F8), linear-gradient(to left, #FB9B33, #EA5DFD);
+        }
+      }
+    }
+  }
+}
+
+@font-face {
+  font-family: "Exo2-SemiBold";
+  src: url("@/font/Exo2-SemiBold.ttf");
+}
+
+@font-face {
+  font-family: "MontserratAlternates-SemiBoldItalic";
+  src: url("@/font/MontserratAlternates-SemiBoldItalic.ttf");
+}
+
+@font-face {
+  font-family: "MontserratAlternates-BlackItalic";
+  src: url("@/font/MontserratAlternates-BlackItalic.ttf");
+}
+
+@media (min-width: 1600px) {
+}
