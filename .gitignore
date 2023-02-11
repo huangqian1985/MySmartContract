@@ -13,3 +13,5 @@ output/
 
 *.csv
 go.sum
+/JavaScript/NaughtyHamsterMintWebsite/dist/
+/JavaScript/NaughtyHamsterMintWebsite/node_modules/
