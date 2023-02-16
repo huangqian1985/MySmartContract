@@ -8,15 +8,36 @@
         <li class="logo"></li>
         <li><a href="#">Twitter</a></li>
         <li><a href="#">Discord</a></li>
-        <li v-if="account === null" class="connect" @click="showDialog({ id: 'connect' })">
+        <li
+          v-if="account === null"
+          class="connect"
+          @click="showDialog({ id: 'connect' })"
+        >
           CONNECT
         </li>
-        <li v-else class="logout" @click="disconnectWallet">{{ account }}</li>
+        <li v-else class="account-wrap">
+          <span>{{ account }}</span>
+          <img class="account" :src="getAssetsFile('web/account.png')" alt="" />
+          <img
+            class="logout"
+            :src="getAssetsFile('web/logout.png')"
+            alt=""
+            @click="disconnectWallet"
+          />
+        </li>
       </ul>
     </nav>
     <header>
-      <img class="animate-left-icon" :src="getAssetsFile('web/animate-left-icon.png')" alt="" />
-      <img class="animate-right-icon" :src="getAssetsFile('web/animate-right-icon.png')" alt="" />
+      <img
+        class="animate-left-icon"
+        :src="getAssetsFile('web/animate-left-icon.png')"
+        alt=""
+      />
+      <img
+        class="animate-right-icon"
+        :src="getAssetsFile('web/animate-right-icon.png')"
+        alt=""
+      />
       <section class="title">
         <h3>Naughty Hamster is a freehand<span class="nfts"></span></h3>
         <h4>Living on the Ethereum blockchain</h4>
@@ -48,9 +69,12 @@
           <div class="progress-box">
             <div class="label">Chain:Ethereum</div>
             <div class="progress">
-              <div class="progress-stick" :style="{
-                marginLeft: '-' + progressMargin + 'px',
-              }"></div>
+              <div
+                class="progress-stick"
+                :style="{
+                  marginLeft: '-' + progressMargin + 'px',
+                }"
+              ></div>
               <div class="progress-text">
                 {{ totalSupply + ":" + mintMaxSize }}
               </div>
@@ -58,11 +82,16 @@
           </div>
           <div class="price-box">
             <span class="add" @click="handleCount('add')"></span>
-            <input class="count" type="text" v-model="count" @input="
-              (e) => {
-                count = e.target.value.replace(/[^\d]/g, '');
-              }
-            " />
+            <input
+              class="count"
+              type="text"
+              v-model="count"
+              @input="
+                (e) => {
+                  count = e.target.value.replace(/[^\d]/g, '');
+                }
+              "
+            />
             <span class="reduce" @click="handleCount('reduce')"></span>
             <span id="mint" @click="publicMint"></span>
           </div>
@@ -187,9 +216,14 @@
             <div class="content">
               <p>
                 contract address:0x7a4d1b54dd21dde804c18b7a830b5bc6e586a7f6s
-                <a class="copy" href="#" @click="
-                  copyHandle('0x7a4d1b54dd21dde804c18b7a830b5bc6e586a7f6s')
-                ">COPY</a>
+                <a
+                  class="copy"
+                  href="#"
+                  @click="
+                    copyHandle('0x7a4d1b54dd21dde804c18b7a830b5bc6e586a7f6s')
+                  "
+                  >COPY</a
+                >
               </p>
             </div>
           </section>
@@ -212,9 +246,15 @@
   <el-backtop :right="100" :bottom="100" />
   <Dialog v-model="dialog.visible" width="auto" :title="dialog.title">
     <!--  连接    -->
-    <DialogConnect style="width: 856px" v-if="dialog.id === 'connect'"></DialogConnect>
+    <DialogConnect
+      style="width: 856px"
+      v-if="dialog.id === 'connect'"
+    ></DialogConnect>
     <!--  错误    -->
-    <DialogError style="width: 856px" v-if="dialog.id === 'error'"></DialogError>
+    <DialogError
+      style="width: 856px"
+      v-if="dialog.id === 'error'"
+    ></DialogError>
   </Dialog>
 </template>
 
@@ -224,6 +264,7 @@ import { getAssetsFile, copyHandle } from "@/utils/tools";
 import abi from "@/utils/NaughtyHamsterNFT.json";
 import { ethers } from "ethers";
 import { useAccountStore } from "@/stores/account";
+import { getTotalSupply } from "@/api";
 import initMapDialog from "@/components/dialog";
 import DialogConnect from "./Connect.vue";
 import DialogError from "./Error.vue";
@@ -234,7 +275,7 @@ const { dialog, showDialog, Dialog } = initMapDialog();
 const count = ref(1);
 // 进度条读数
 const totalSupply = ref(1);
-const mintMaxSize = ref(1);
+const mintMaxSize = ref(5000);
 
 // Contract Address & ABI
 const contractAddress = "0x0CD057EC2f2D56b0A8d4881022Bf409d1Cc129Ba";
@@ -251,8 +292,9 @@ const progress = async () => {
     console.log(provider)
     let contract = new ethers.Contract(contractAddress, contractABI, provider);
     console.log(contract)
-    mintMaxSize.value = 5000;
-    totalSupply.value = await contract.totalSupply();
+    
+    // totalSupply.value = await getTotalSupply();
+    totalSupply.value = await mintContract.totalSupply();
   } catch (error) {
     console.log(error);
   }
@@ -297,7 +339,7 @@ const handleCount = (action) => {
   }
 };
 
-// 付费mint(0.001ETH)
+// 付费mint(0.01ETH)
 const publicMint = async () => {
   try {
     const { ethereum } = window;
@@ -312,7 +354,7 @@ const publicMint = async () => {
       );
 
       const publicMintTxn = await mintContract.publicMint(1, {
-        value: ethers.utils.parseEther((count.value * 0.01).toString()),
+        value: parseEther((count.value * 0.01).toString()),
       });
 
       await publicMintTxn.wait();
@@ -346,7 +388,7 @@ onMounted(() => {
   background-size: cover;
   padding: 36px 0;
 
-  >nav {
+  > nav {
     width: 1440px;
     margin: 0 auto;
 
@@ -356,7 +398,7 @@ onMounted(() => {
       justify-content: space-between;
       align-items: center;
 
-      >li {
+      > li {
         font-weight: 600;
 
         &.logo {
@@ -376,20 +418,34 @@ onMounted(() => {
           cursor: pointer;
         }
 
-        &.logout {
-          background: url("@/assets/web/logout.png") 0 0 no-repeat;
-          width: 217px;
+        &.account-wrap {
+          background: #febb9e;
+          display: flex;
+          flex-flow: row nowrap;
+          justify-content: space-between;
+          align-items: center;
+          width: 216px;
           height: 50px;
           line-height: 50px;
-          color: #ffffff;
-          font-size: 18px;
-          cursor: pointer;
+          border-radius: 26px;
+          padding-left: 25px;
+          padding-right: 6px;
+          font-size: 14px;
+          > span {
+            width: 95px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
+          > .logout {
+            cursor: pointer;
+          }
         }
       }
     }
   }
 
-  >header {
+  > header {
     position: relative;
     width: 1440px;
     margin: 0 auto;
@@ -408,8 +464,8 @@ onMounted(() => {
       width: 150px;
     }
 
-    >section.title {
-      >h3 {
+    > section.title {
+      > h3 {
         margin: 50px 0;
         text-align: center;
         font-family: "MontserratAlternates-BlackItalic";
@@ -426,7 +482,7 @@ onMounted(() => {
         }
       }
 
-      >h4 {
+      > h4 {
         margin: 0 0 65px 0;
         text-align: center;
         font-family: "MontserratAlternates-BlackItalic";
@@ -435,7 +491,7 @@ onMounted(() => {
       }
     }
 
-    >section.content {
+    > section.content {
       display: flex;
       flex-flow: row nowrap;
       justify-content: center;
@@ -445,7 +501,7 @@ onMounted(() => {
         flex-flow: row wrap;
         align-content: space-between;
 
-        >li {
+        > li {
           width: 50%;
 
           .label {
@@ -466,7 +522,7 @@ onMounted(() => {
         flex-flow: column nowrap;
         width: 640px;
 
-        >p {
+        > p {
           margin: 0 0 50px;
           font-size: 36px;
           font-weight: 600;
@@ -494,16 +550,15 @@ onMounted(() => {
             border-radius: 40px;
             text-align: center;
             overflow: hidden;
-
-            >.progress-stick {
-              background: url("@/assets/web/progress-stick.png") 0 center no-repeat;
+            > .progress-stick {
+              background: url("@/assets/web/progress-stick.png") 0 center
+                no-repeat;
               background-size: auto 100%;
               width: 100%;
               height: 100%;
               border-radius: 40px;
             }
-
-            >.progress-text {
+            > .progress-text {
               position: absolute;
               top: 0;
               left: 0;
@@ -574,7 +629,7 @@ onMounted(() => {
     margin: 70px 0;
   }
 
-  >main {
+  > main {
     .road-map {
       background: url("@/assets/web/road-map.png") center center no-repeat;
       height: 49px;
@@ -582,7 +637,8 @@ onMounted(() => {
 
     .road-map-content {
       position: relative;
-      background: url("@/assets/web/road-map-content.png") center center no-repeat;
+      background: url("@/assets/web/road-map-content.png") center center
+        no-repeat;
       width: 1600px;
       height: 734px;
       margin: 0 auto;
@@ -594,7 +650,7 @@ onMounted(() => {
         font-family: "MontserratAlternates-BlackItalic";
         font-size: 36px;
 
-        >li {
+        > li {
           float: left;
           width: 318px;
 
@@ -619,7 +675,7 @@ onMounted(() => {
         top: 300px;
         left: 226px;
 
-        >li {
+        > li {
           float: left;
           width: 318px;
           font-size: 28px;
@@ -632,7 +688,7 @@ onMounted(() => {
         top: 460px;
         left: 164px;
 
-        >li {
+        > li {
           float: left;
           width: 318px;
           padding: 20px;
@@ -664,10 +720,10 @@ onMounted(() => {
       width: 1220px;
       margin: 0 auto;
 
-      >li {
+      > li {
         margin-bottom: 50px;
 
-        >section {
+        > section {
           background-image: url("@/assets/web/faq-panel-icon.png");
           background-position: 70px 80px;
           background-repeat: no-repeat;
@@ -685,11 +741,11 @@ onMounted(() => {
         }
 
         &:nth-child(1) {
-          >section {
+          > section {
             position: relative;
             overflow: hidden;
 
-            >.content {
+            > .content {
               width: 513px;
             }
 
@@ -705,16 +761,16 @@ onMounted(() => {
         }
 
         &:nth-child(2) {
-          >section {
-            >.content {
+          > section {
+            > .content {
               width: 883px;
 
-              >ul {
+              > ul {
                 display: flex;
                 flex-flow: row nowrap;
                 justify-content: space-evenly;
 
-                >li {
+                > li {
                   .image {
                     width: 220px;
                     height: 157px;
@@ -728,26 +784,30 @@ onMounted(() => {
                   }
 
                   &:nth-child(1) {
-                    >.image {
-                      background: url("@/assets/web/faq-actities.png") center center no-repeat;
+                    > .image {
+                      background: url("@/assets/web/faq-actities.png") center
+                        center no-repeat;
                     }
                   }
 
                   &:nth-child(2) {
-                    >.image {
-                      background: url("@/assets/web/faq-ip.png") center center no-repeat;
+                    > .image {
+                      background: url("@/assets/web/faq-ip.png") center center
+                        no-repeat;
                     }
                   }
 
                   &:nth-child(3) {
-                    >.image {
-                      background: url("@/assets/web/faq-discount.png") center center no-repeat;
+                    > .image {
+                      background: url("@/assets/web/faq-discount.png") center
+                        center no-repeat;
                     }
                   }
 
                   &:nth-child(4) {
-                    >.image {
-                      background: url("@/assets/web/faq-future.png") center center no-repeat;
+                    > .image {
+                      background: url("@/assets/web/faq-future.png") center
+                        center no-repeat;
                     }
                   }
                 }
@@ -757,21 +817,23 @@ onMounted(() => {
         }
 
         &:nth-child(3) {
-          >section {
-            >.content {
+          > section {
+            > .content {
               .link-buttons {
-                >a {
+                > a {
                   float: left;
                   width: 212px;
                   height: 62px;
                   margin-right: 30px;
 
                   &.twitter {
-                    background: url("@/assets/web/faq-twitter.png") center center no-repeat;
+                    background: url("@/assets/web/faq-twitter.png") center
+                      center no-repeat;
                   }
 
                   &.discord {
-                    background: url("@/assets/web/faq-discord.png") center center no-repeat;
+                    background: url("@/assets/web/faq-discord.png") center
+                      center no-repeat;
                   }
                 }
               }
@@ -780,8 +842,8 @@ onMounted(() => {
         }
 
         &:nth-child(5) {
-          >section {
-            >.content {
+          > section {
+            > .content {
               .copy {
                 background: #000000;
                 display: inline-block;
@@ -801,10 +863,10 @@ onMounted(() => {
     }
   }
 
-  >footer {
+  > footer {
     background: #000102;
 
-    >section {
+    > section {
       display: flex;
       flex-flow: row nowrap;
       justify-content: space-between;
@@ -830,25 +892,29 @@ onMounted(() => {
         display: flex;
         flex-flow: row nowrap;
 
-        >a {
+        > a {
           width: 32px;
           height: 22px;
           margin-right: 27px;
 
           &.footer-youtube {
-            background: url("@/assets/web/footer-youtube.png") center center no-repeat;
+            background: url("@/assets/web/footer-youtube.png") center center
+              no-repeat;
           }
 
           &.footer-instagram {
-            background: url("@/assets/web/footer-instagram.png") center center no-repeat;
+            background: url("@/assets/web/footer-instagram.png") center center
+              no-repeat;
           }
 
           &.footer-twitter {
-            background: url("@/assets/web/footer-twitter.png") center center no-repeat;
+            background: url("@/assets/web/footer-twitter.png") center center
+              no-repeat;
           }
 
           &.footer-discord {
-            background: url("@/assets/web/footer-discord.png") center center no-repeat;
+            background: url("@/assets/web/footer-discord.png") center center
+              no-repeat;
           }
         }
       }
