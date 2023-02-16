@@ -152,7 +152,7 @@ const progress = async () => {
     console.log(contract)
     
     // totalSupply.value = await getTotalSupply();
-    totalSupply.value = await mintContract.totalSupply();
+    totalSupply.value = await contract.totalSupply();
   } catch (error) {
     console.log(error);
   }
@@ -212,7 +212,7 @@ const publicMint = async () => {
       );
 
       const publicMintTxn = await mintContract.publicMint(1, {
-        value: parseEther((count.value * 0.01).toString()),
+        value: ethers.utils.parseEther((count.value * 0.01).toString()),
       });
 
       await publicMintTxn.wait();
