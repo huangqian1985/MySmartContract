@@ -6,6 +6,8 @@ import router from './router'
 import 'normalize.css/normalize.css'
 import './assets/main.scss'
 
+import 'amfe-flexible'
+
 const app = createApp(App)
 
 app.use(createPinia())

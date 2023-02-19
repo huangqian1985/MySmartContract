@@ -232,13 +232,13 @@
     </main>
     <footer>
       <section>
-        <span class="copyright">Copyright ©2021 Naughty Playground LLC</span>
+        <span class="copyright">Copyright ©2021 Naughty Group LLC</span>
         <div class="footer-logo"></div>
         <div class="link-list">
-          <a class="footer-youtube" href="#"></a>
-          <a class="footer-instagram" href="#"></a>
-          <a class="footer-twitter" href="#"></a>
-          <a class="footer-discord" href="#"></a>
+<!--          <a class="footer-youtube" href="#"></a>
+          <a class="footer-instagram" href="#"></a>-->
+          <a class="footer-twitter" href="https://twitter.com/naughtyDAOweb3"></a>
+          <a class="footer-discord" href="https://discord.gg/ErHRUU5eXd"></a>
         </div>
       </section>
     </footer>
@@ -249,11 +249,13 @@
     <DialogConnect
       style="width: 856px"
       v-if="dialog.id === 'connect'"
+      @hideDialog="hideDialog"
     ></DialogConnect>
     <!--  错误    -->
     <DialogError
       style="width: 856px"
       v-if="dialog.id === 'error'"
+      @hideDialog="hideDialog"
     ></DialogError>
   </Dialog>
 </template>
@@ -266,8 +268,8 @@ import { ethers } from "ethers";
 import { useAccountStore } from "@/stores/account";
 import { getTotalSupply } from "@/api";
 import initMapDialog from "@/components/dialog";
-import DialogConnect from "./Connect.vue";
-import DialogError from "./Error.vue";
+import DialogConnect from "./web/Connect.vue";
+import DialogError from "./web/Error.vue";
 // 弹窗相关
 const { dialog, showDialog, Dialog } = initMapDialog();
 
@@ -371,6 +373,11 @@ const publicMint = async () => {
   }
 };
 
+// 隐藏弹窗
+const hideDialog = () => {
+    dialog.visible = false
+}
+
 // 页面加载完成时执行
 onMounted(() => {
   // 判断登录状态
@@ -400,6 +407,7 @@ onMounted(() => {
 
       > li {
         font-weight: 600;
+        font-size: 18px;
 
         &.logo {
           background: url("@/assets/web/logo.png") 0 0 no-repeat;
