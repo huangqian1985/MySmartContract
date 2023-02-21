@@ -2,9 +2,12 @@
   <div id="main-container">
     <nav>
       <div class="nav-top">
-        <div @click="menuActive = !menuActive" class="nav-icon" :class="{
-            active: menuActive
-        }"></div>
+        <label for="burger" class="burger">
+          <input id="burger" type="checkbox" @change="menuActive = !menuActive"/>
+          <span></span>
+          <span></span>
+          <span></span>
+        </label>
       </div>
       <ul v-if="menuActive">
         <li
@@ -46,7 +49,7 @@
         <h3>Naughty Hamster is a freehand<span class="nfts"></span></h3>
         <h4>Living on the Ethereum blockchain</h4>
       </section>
-      <section class="content">
+      <section class="content" id="mint">
         <ul class="left-list">
           <li>
             <div class="label">Styles</div>
@@ -97,7 +100,7 @@
               "
             />
             <span class="reduce" @click="handleCount('reduce')"></span>
-            <span id="mint" @click="publicMint"></span>
+            <span @click="publicMint"></span>
           </div>
         </div>
       </section>
@@ -233,14 +236,15 @@
           <section>
             <div class="title">Verified contract</div>
             <div class="content">
-              <p>
-                contract address:
-              </p>
+              <p>contract address:</p>
               <a
                 class="copy"
                 href="#"
-                @click="copyHandle('0x7a4d1b54dd21dde804c18b7a830b5bc6e586a7f6s')">
-                  COPY
+                @click="
+                  copyHandle('0x7a4d1b54dd21dde804c18b7a830b5bc6e586a7f6s')
+                "
+              >
+                COPY
               </a>
             </div>
           </section>
@@ -252,27 +256,28 @@
         <div class="footer-logo"></div>
         <div class="link-list">
           <!--          <a class="footer-youtube" href="#"></a>
-                              <a class="footer-instagram" href="#"></a>-->
+                                        <a class="footer-instagram" href="#"></a>-->
           <a
             class="footer-twitter"
             href="https://twitter.com/naughtyDAOweb3"
+            target="_blank"
           ></a>
-          <a class="footer-discord" href="https://discord.gg/ErHRUU5eXd"></a>
+          <a
+            class="footer-discord"
+            href="https://discord.gg/ErHRUU5eXd"
+            target="_blank"
+          ></a>
         </div>
-          <span class="copyright">Copyright ©2021 Naughty Group LLC</span>
+        <span class="copyright">Copyright ©2023 Naughty Group LLC</span>
       </section>
     </footer>
   </div>
   <el-backtop :right="20" :bottom="20" />
   <Dialog v-model="dialog.visible" width="auto" :title="dialog.title">
     <!--  连接    -->
-    <DialogConnect
-      v-if="dialog.id === 'connect'"
-    ></DialogConnect>
+    <DialogConnect v-if="dialog.id === 'connect'"></DialogConnect>
     <!--  错误    -->
-    <DialogError
-      v-if="dialog.id === 'error'"
-    ></DialogError>
+    <DialogError v-if="dialog.id === 'error'"></DialogError>
   </Dialog>
 </template>
 
@@ -290,7 +295,7 @@ import DialogError from "@/views/mobile/Error.vue";
 const { dialog, showDialog, Dialog } = initMapDialog();
 
 // 菜单相关
-const menuActive = ref(false)
+const menuActive = ref(false);
 // 计数器
 const count = ref(1);
 // 进度条读数
@@ -361,6 +366,11 @@ const handleCount = (action) => {
 
 // 付费mint(0.01ETH)
 const publicMint = async () => {
+  // 判断是否登录
+  if (account === null) {
+    showDialog({ id: "connect" });
+    return;
+  }
   try {
     const { ethereum } = window;
 
@@ -413,6 +423,7 @@ onMounted(() => {
     width: 100%;
     background: #ffffff;
     z-index: 1;
+
     .nav-top {
       background: url("@/assets/web/logo.png") center center no-repeat;
       background-size: 37px 38px;
@@ -422,16 +433,66 @@ onMounted(() => {
       align-items: flex-end;
       height: 60px;
 
-      > .nav-icon {
-        width: 30px;
-        height: 30px;
-        border-top-width: 2px;
-        border-right-width: 0;
-        border-bottom-width: 2px;
-        border-left-width: 0;
-        border-style: solid;
-        border-color: #000000;
-        margin-right: 26px;
+      .burger {
+        position: relative;
+        width: 20px;
+        height: 20px;
+        background: transparent;
+        margin-right: 30px;
+        cursor: pointer;
+
+        input {
+          display: none;
+
+          &:checked {
+            ~ span:nth-of-type(1) {
+              transform: rotate(45deg);
+              top: 0px;
+              left: 3px;
+            }
+
+            ~ span:nth-of-type(2) {
+              width: 0%;
+              opacity: 0;
+            }
+
+            ~ span:nth-of-type(3) {
+              transform: rotate(-45deg);
+              top: 14px;
+              left: 2px;
+            }
+          }
+        }
+
+        span {
+          display: block;
+          position: absolute;
+          height: 4px;
+          width: 100%;
+          background: black;
+          border-radius: 9px;
+          opacity: 1;
+          left: 0;
+          transform: rotate(0deg);
+          transition: 0.25s ease-in-out;
+
+          &:nth-of-type(1) {
+            top: 0px;
+            transform-origin: left center;
+          }
+
+          &:nth-of-type(2) {
+            top: 50%;
+            transform: translateY(-50%);
+            transform-origin: left center;
+          }
+
+          &:nth-of-type(3) {
+            top: 100%;
+            transform-origin: left center;
+            transform: translateY(-100%);
+          }
+        }
       }
     }
 
@@ -506,6 +567,7 @@ onMounted(() => {
 
     > section.title {
       overflow: hidden;
+
       > h3 {
         margin: 34px 0;
         text-align: center;
@@ -684,6 +746,7 @@ onMounted(() => {
 
       > li {
         margin-bottom: 27px;
+
         > .list-title {
           background-image: url("@/assets/mobile/roadmap-step.png");
           background-position: 0 center;
@@ -692,6 +755,7 @@ onMounted(() => {
           padding-left: 50px;
           font-family: "MontserratAlternates-BlackItalic";
           font-size: 24px;
+
           &.active {
             background-image: url("@/assets/mobile/roadmap-step-active.png");
           }
@@ -712,15 +776,19 @@ onMounted(() => {
             margin-bottom: 26px;
             font-size: 28px;
             font-weight: 600;
+
             &.one {
               background-image: url("@/assets/mobile/roadmap-number1.png");
             }
+
             &.two {
               background-image: url("@/assets/mobile/roadmap-number2.png");
             }
+
             &.three {
               background-image: url("@/assets/mobile/roadmap-number3.png");
             }
+
             &.four {
               background-image: url("@/assets/mobile/roadmap-number4.png");
             }
@@ -768,6 +836,7 @@ onMounted(() => {
             position: relative;
             padding-bottom: 383px;
             overflow: hidden;
+
             .bg-image {
               background: url("@/assets/web/faq-panel-bg-1.png") 0 0 no-repeat;
               position: absolute;
@@ -787,8 +856,10 @@ onMounted(() => {
                 display: flex;
                 flex-flow: column nowrap;
                 align-items: center;
+
                 > li {
                   margin-bottom: 36px;
+
                   .image {
                     width: 220px;
                     height: 157px;
@@ -841,6 +912,7 @@ onMounted(() => {
                 display: flex;
                 flex-flow: column nowrap;
                 align-items: center;
+
                 > a {
                   display: block;
                   width: 212px;
@@ -897,6 +969,7 @@ onMounted(() => {
         height: 59px;
         margin-bottom: 40px;
       }
+
       .link-list {
         display: flex;
         flex-flow: row nowrap;
@@ -928,12 +1001,12 @@ onMounted(() => {
           }
         }
       }
+
       .copyright {
         font-size: 14px;
         font-weight: 600;
         color: #ffffff;
       }
-
     }
   }
 }

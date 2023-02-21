@@ -42,7 +42,7 @@
         <h3>Naughty Hamster is a freehand<span class="nfts"></span></h3>
         <h4>Living on the Ethereum blockchain</h4>
       </section>
-      <section class="content">
+      <section class="content" id="mint">
         <ul class="left-list">
           <li>
             <div class="label">Styles</div>
@@ -93,7 +93,7 @@
               "
             />
             <span class="reduce" @click="handleCount('reduce')"></span>
-            <span id="mint" @click="publicMint"></span>
+            <span @click="publicMint"></span>
           </div>
         </div>
       </section>
@@ -232,13 +232,13 @@
     </main>
     <footer>
       <section>
-        <span class="copyright">Copyright ©2021 Naughty Group LLC</span>
+        <span class="copyright">Copyright ©2023 Naughty Group LLC</span>
         <div class="footer-logo"></div>
         <div class="link-list">
 <!--          <a class="footer-youtube" href="#"></a>
           <a class="footer-instagram" href="#"></a>-->
-          <a class="footer-twitter" href="https://twitter.com/naughtyDAOweb3"></a>
-          <a class="footer-discord" href="https://discord.gg/ErHRUU5eXd"></a>
+          <a class="footer-twitter" href="https://twitter.com/naughtyDAOweb3" target="_blank"></a>
+          <a class="footer-discord" href="https://discord.gg/ErHRUU5eXd" target="_blank"></a>
         </div>
       </section>
     </footer>
@@ -343,6 +343,11 @@ const handleCount = (action) => {
 
 // 付费mint(0.01ETH)
 const publicMint = async () => {
+    // 判断是否登录
+    if(account === null) {
+        showDialog({ id: 'connect' })
+        return
+    }
   try {
     const { ethereum } = window;
 
