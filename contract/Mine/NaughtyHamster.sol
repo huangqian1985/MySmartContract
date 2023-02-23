@@ -75,7 +75,7 @@ contract NaughtyHamsterNFT is ERC721Psi, Ownable {
             revert ReachMaxSupply();
         }
 
-        if (numberMinted(msg.sender) + quantity > mintMaxCount) {
+        if (getNumberMinted(msg.sender) + quantity > mintMaxCount) {
             revert MintMoreThanAllowed();
         }
 
@@ -116,7 +116,7 @@ contract NaughtyHamsterNFT is ERC721Psi, Ownable {
         return block.timestamp >= publicMintStartTime;
     }
 
-    function numberMinted(address minter) public view returns (uint256) {
+    function getNumberMinted(address minter) public view returns (uint256) {
         return _numberMinted[minter];
     }
 
