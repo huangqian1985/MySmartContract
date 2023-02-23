@@ -76,7 +76,7 @@ emit("update:modelValue", !props.modelValue)
         }
       }
       .dialog-content {
-        padding: 50px 20px 20px;
+        padding: 60px 20px 20px;
       }
     }
   }
