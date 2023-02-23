@@ -1,9 +1,9 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
-export const useAccountStore = defineStore('counter', () => {
+export const useAccountStore = defineStore('userStore', () => {
   const account = ref(null)
-  function setAccount(id) {
+  const setAccount = (id) => {
     account.value = id
   }
 

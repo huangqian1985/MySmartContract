@@ -4,8 +4,8 @@
 </template>
 
 <script setup>
-import WebPage from "./WebPage.vue";
-import MobilePage from "./MobilePage.vue";
+import WebPage from "./web/WebPage.vue";
+import MobilePage from "./mobile/MobilePage.vue";
 import { getDeviceType } from "@/utils/tools"
 </script>
 
