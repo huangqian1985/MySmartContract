@@ -704,7 +704,8 @@ onMounted(() => {
           background: url("@/assets/web/price-box.png") 0 0 no-repeat;
           background-size: contain;
           position: relative;
-          height: 65px;
+          width: 402px;
+          height: 80px;
 
           .add {
             position: absolute;
@@ -721,7 +722,7 @@ onMounted(() => {
             position: absolute;
             top: 18px;
             left: 55px;
-            display: inline-block;
+            display: block;
             width: 90px;
             height: 28px;
             line-height: 28px;
@@ -757,7 +758,7 @@ onMounted(() => {
     background: url("@/assets/web/banner.png") center center no-repeat;
     background-size: cover;
     height: 90px;
-    margin: 30px 0;
+    margin: 10px 0 30px;
   }
 
   > main {

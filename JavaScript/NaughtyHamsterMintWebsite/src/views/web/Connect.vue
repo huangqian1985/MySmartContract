@@ -17,6 +17,7 @@ const connectWallet = async () => {
 
     if (!ethereum) {
       console.log("please install MetaMask");
+      window.open("https://metamask.io", "_blank");
     }
 
     const accounts = await ethereum.request({

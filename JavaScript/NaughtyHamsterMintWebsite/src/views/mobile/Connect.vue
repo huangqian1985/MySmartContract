@@ -47,7 +47,6 @@ const hideDialog = () => {
     dialog.visible = false;
 };
 </script>
-<script lang="ts" setup></script>
 
 <style scoped lang="scss">
 .main-content {

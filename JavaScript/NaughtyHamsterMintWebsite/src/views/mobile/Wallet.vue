@@ -29,6 +29,9 @@ const emit = defineEmits(["hideDialog"]);
     font-family: MontserratAlternates-BlackItalic;
     font-weight: normal;
   }
+  > p {
+    font-size: 21px;
+  }
   .button {
     background: linear-gradient(90deg, #ea5cff 0%, #fb9b33 100%);
     display: block;
