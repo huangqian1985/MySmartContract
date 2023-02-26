@@ -1,0 +1,4 @@
+[ethereum]
+    serverPort = 9999
+    rpcURL = "https://eth-goerli.g.alchemy.com/v2/Yy5Huxu5D7mM0_BigYQzKoiPVCxBw69p"
+    contractAddr = "0x0CD057EC2f2D56b0A8d4881022Bf409d1Cc129Ba"
