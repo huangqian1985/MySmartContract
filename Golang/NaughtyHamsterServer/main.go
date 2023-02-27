@@ -24,6 +24,7 @@ var (
 	logger               *glog.Logger
 	ctx                  = gctx.New()
 	rpcURL, contractAddr string
+	crtFile, keyFile     string
 	serverPort           int
 	totalSupply          int64
 )
@@ -41,12 +42,22 @@ func main() {
 	startTimer()
 
 	s := g.Server()
-	group := s.Group("")
-	group.GET(TotalSupply, func(req *ghttp.Request) {
-		req.Response.Write(getTotalSupply())
+	s.Group("", func(group *ghttp.RouterGroup) {
+		//
+		group.Middleware(MiddlewareCORS)
+		//
+		group.GET(TotalSupply, func(req *ghttp.Request) {
+			req.Response.Write(getTotalSupply())
+		})
 	})
+	s.EnableHTTPS(crtFile, keyFile)
 	s.SetPort(serverPort)
 	s.Run()
+}
+
+func MiddlewareCORS(r *ghttp.Request) {
+	r.Response.CORSDefault()
+	r.Middleware.Next()
 }
 
 func initConfig() error {
@@ -67,6 +78,19 @@ func initConfig() error {
 	} else {
 		contractAddr = val.String()
 	}
+
+	if val, err := g.Config().Get(ctx, "ethereum.cryFile"); err != nil {
+		return err
+	} else {
+		crtFile = val.String()
+	}
+
+	if val, err := g.Config().Get(ctx, "ethereum.keyFile"); err != nil {
+		return err
+	} else {
+		keyFile = val.String()
+	}
+
 	logger.Debug(ctx, "initConfig finish")
 	return nil
 }

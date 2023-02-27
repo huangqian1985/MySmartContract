@@ -5,7 +5,11 @@
       Please go to the website on PC for wallet login, or open the current web
       page in the built-in browser of Metamask APP to login
     </p>
-    <a class="button" href="https://metamask.io/" target="_blank" @click="emit('hideDialog')"
+    <a
+      class="button"
+      href="https://metamask.io/"
+      target="_blank"
+      @click="emit('hideDialog')"
       ><img :src="getAssetsFile('mobile/install.png')" alt="" />MetaMask</a
     >
   </section>

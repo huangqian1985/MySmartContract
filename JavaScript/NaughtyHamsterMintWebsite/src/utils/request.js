@@ -1,11 +1,11 @@
 import axios from "axios";
 
-const errorCode = {
+/*const errorCode = {
   401: "认证失败，无法访问系统资源",
   403: "当前操作没有权限",
   404: "访问资源不存在",
   default: "系统未知错误，请反馈给管理员",
-};
+};*/
 
 axios.defaults.headers["Content-Type"] = "application/json;charset=utf-8";
 
@@ -21,7 +21,7 @@ const service = axios.create({
 service.interceptors.response.use(
   (res) => {
     // 未设置状态码则默认成功状态
-    const code = res.data.code || "200";
+    /*const code = res.data.code || "200";
     // 获取错误信息
     const message = errorCode[code] || res.data.msg || errorCode.default;
     if (code === "203") {
@@ -31,7 +31,8 @@ service.interceptors.response.use(
       return Promise.reject(new Error(message));
     } else {
       return res.data;
-    }
+    }*/
+    return res.data;
   },
   (error) => {
     console.log(error.message);

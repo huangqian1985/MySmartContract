@@ -32,7 +32,8 @@ export default defineConfig({
           rootValue: 42.8, // 1rem的大小
           propList: ["*"], // 需要转换的属性，这里选择全部都进行转换
           exclude: function (file) {
-            return file.indexOf('web') !== -1 || file.indexOf('Web') !== -1;
+            console.log(file, file.indexOf('/web') !== -1)
+            return true
           }
         }),
       ],

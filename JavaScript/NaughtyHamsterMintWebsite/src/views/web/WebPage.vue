@@ -69,8 +69,10 @@
         </ul>
         <div class="right-content">
           <p>
-            Naughty Hamster is the 1st generation of Naughty Group which take
-            aims at building an IP universe.
+            <span class="text-underline">Naughty Hamster</span> is the 1st
+            generation of
+            <span class="text-underline">Naughty Group</span> which take aims at
+            building an IP universe.
           </p>
           <div class="progress-box">
             <div class="label">Chain:Ethereum</div>
@@ -94,7 +96,7 @@
               v-model="count"
               @input="
                 (e) => {
-                  count = e.target.value.replace(/[^\d]/g, '');
+                  count = e.target.value.replace(/([^\d]|0)/g, '');
                 }
               "
             />
@@ -314,14 +316,13 @@ const { setAccount } = userStore;
 // 进度条
 const progress = async () => {
   try {
-    //
-    let provider = ethers.getDefaultProvider("goerli");
-    console.log(provider);
-    let contract = new ethers.Contract(contractAddress, contractABI, provider);
-    console.log(contract);
+    totalSupply.value = await getTotalSupply();
 
-    // totalSupply.value = await getTotalSupply();
-    totalSupply.value = await contract.totalSupply();
+    // let provider = ethers.getDefaultProvider("goerli");
+    // console.log(provider);
+    // let contract = new ethers.Contract(contractAddress, contractABI, provider);
+    // console.log(contract);
+    // totalSupply.value = await contract.totalSupply();
   } catch (error) {
     console.log(error);
   }
@@ -395,10 +396,13 @@ const publicMint = async () => {
       console.log("publicMint finished!");
     }
   } catch (error) {
-    console.log(error);
-    showDialog({
-      id: "error",
-    });
+    if (!error.includes("ACTION REJECTED")) {
+      showDialog({
+        id: "error",
+      });
+    } else {
+      console.log(error);
+    }
   }
 };
 
@@ -421,6 +425,7 @@ onMounted(() => {
   background-image: url("@/assets/web/main-bg-1920.png");
   background-position: center 0;
   background-repeat: no-repeat;
+  background-color: #fdf7f7;
   background-size: cover;
   padding: 30px 0;
 

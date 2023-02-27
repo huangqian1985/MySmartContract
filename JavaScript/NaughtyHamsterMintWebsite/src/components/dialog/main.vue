@@ -1,20 +1,26 @@
 <template>
   <teleport to="#app">
-  <div class="dialog-box" v-if="modelValue" :style="{width: width, height: height}">
-    <div class="dialog-wrap panel-bg">
-      <section>
-        <div class="dialog-close" @click="hide()"><img src="./images/close.png" alt=""></div>
-        <div class="dialog-header" v-if="title !== ''">
-          <slot name="header">
-            <span class="title">{{ title }}</span>
-          </slot>
-        </div>
-        <div class="dialog-content">
-          <slot></slot>
-        </div>
-      </section>
+    <div
+      class="dialog-box"
+      v-if="modelValue"
+      :style="{ width: width, height: height }"
+    >
+      <div class="dialog-wrap panel-bg">
+        <section>
+          <div class="dialog-close" @click="hide()">
+            <img src="./images/close.png" alt="" />
+          </div>
+          <div class="dialog-header" v-if="title !== ''">
+            <slot name="header">
+              <span class="title">{{ title }}</span>
+            </slot>
+          </div>
+          <div class="dialog-content">
+            <slot></slot>
+          </div>
+        </section>
+      </div>
     </div>
-  </div>
   </teleport>
 </template>
 
@@ -22,33 +28,33 @@
 const props = defineProps({
   modelValue: {
     type: Boolean,
-    default: false
+    default: false,
   },
   width: {
     type: String,
-    default: "400px"
+    default: "400px",
   },
   height: {
     type: String,
-    default: "auto"
+    default: "auto",
   },
   title: {
     type: String,
-    default: ""
-  }
-})
-const emit = defineEmits(["update:modelValue"])
+    default: "",
+  },
+});
+const emit = defineEmits(["update:modelValue"]);
 const hide = () => {
-emit("update:modelValue", !props.modelValue)
-}
+  emit("update:modelValue", !props.modelValue);
+};
 </script>
 
 <style lang="scss" scoped>
 .dialog-box {
   position: fixed;
-  top:50%;
-  left:50%;
-  transform: translate(-50%,-50%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   z-index: 99;
   > .dialog-wrap {
     > section {

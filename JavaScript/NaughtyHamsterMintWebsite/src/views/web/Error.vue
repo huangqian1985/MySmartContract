@@ -2,7 +2,7 @@
   <section class="main-content">
     <h3>SORRY</h3>
     <p>At this stage,only whitelisted users can participate in MINT.</p>
-    <p>Official opening date:    December  20,  2023</p>
+    <p>Official opening date: December 20, 2023</p>
     <div class="button" href="#" @click="emit('hideDialog')">OK</div>
   </section>
 </template>
@@ -36,8 +36,8 @@ const emit = defineEmits(["hideDialog"]);
     text-align: center;
     cursor: pointer;
   }
-   > p {
-     font-size: 18px;
-   }
+  > p {
+    font-size: 18px;
+  }
 }
 </style>

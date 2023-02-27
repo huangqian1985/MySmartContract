@@ -5,7 +5,10 @@
   </section>
   <Dialog v-model="dialog.visible" width="auto" :title="dialog.title">
     <!--  连接钱包    -->
-    <DialogWallet v-if="dialog.id === 'wallet'" @hideDialog="hideDialog"></DialogWallet>
+    <DialogWallet
+      v-if="dialog.id === 'wallet'"
+      @hideDialog="hideDialog"
+    ></DialogWallet>
   </Dialog>
 </template>
 
@@ -28,7 +31,7 @@ const connectWallet = async () => {
       showDialog({
         id: "wallet",
       });
-      return
+      return;
     }
 
     const accounts = await ethereum.request({
@@ -44,7 +47,7 @@ const connectWallet = async () => {
 
 // 隐藏弹窗
 const hideDialog = () => {
-    dialog.visible = false;
+  dialog.visible = false;
 };
 </script>
 

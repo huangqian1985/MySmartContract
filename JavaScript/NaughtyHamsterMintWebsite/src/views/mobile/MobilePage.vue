@@ -80,8 +80,10 @@
         </ul>
         <div class="right-content">
           <p>
-            Naughty Hamster is the 1st generation of Naughty Group which take
-            aims at building an IP universe.
+            <span class="text-underline">Naughty Hamster</span> is the 1st
+            generation of
+            <span class="text-underline">Naughty Group</span> which take aims at
+            building an IP universe.
           </p>
           <div class="progress-box">
             <div class="label">Chain:Ethereum</div>
@@ -105,7 +107,7 @@
               v-model="count"
               @input="
                 (e) => {
-                  count = e.target.value.replace(/[^\d]/g, '');
+                  count = e.target.value.replace(/([^\d]|0)/g, '');
                 }
               "
             />
@@ -293,9 +295,15 @@
   <el-backtop :right="20" :bottom="20" />
   <Dialog v-model="dialog.visible" width="auto" :title="dialog.title">
     <!--  连接    -->
-    <DialogConnect v-if="dialog.id === 'connect'" @hideDialog="hideDialog"></DialogConnect>
+    <DialogConnect
+      v-if="dialog.id === 'connect'"
+      @hideDialog="hideDialog"
+    ></DialogConnect>
     <!--  错误    -->
-    <DialogError v-if="dialog.id === 'error'" @hideDialog="hideDialog"></DialogError>
+    <DialogError
+      v-if="dialog.id === 'error'"
+      @hideDialog="hideDialog"
+    ></DialogError>
   </Dialog>
 </template>
 
@@ -333,14 +341,13 @@ const { setAccount } = userStore;
 // 进度条
 const progress = async () => {
   try {
-    //
-    let provider = ethers.getDefaultProvider("goerli");
-    console.log(provider);
-    let contract = new ethers.Contract(contractAddress, contractABI, provider);
-    console.log(contract);
+    totalSupply.value = await getTotalSupply();
 
-    // totalSupply.value = await getTotalSupply();
-    totalSupply.value = await contract.totalSupply();
+    // let provider = ethers.getDefaultProvider("goerli");
+    // console.log(provider);
+    // let contract = new ethers.Contract(contractAddress, contractABI, provider);
+    // console.log(contract);
+    // totalSupply.value = await contract.totalSupply();
   } catch (error) {
     console.log(error);
   }
@@ -415,16 +422,19 @@ const publicMint = async () => {
       console.log("publicMint finished!");
     }
   } catch (error) {
-    console.log(error);
-    showDialog({
-      id: "error",
-    });
+    if (!error.includes("ACTION REJECTED")) {
+      showDialog({
+        id: "error",
+      });
+    } else {
+      console.log(error);
+    }
   }
 };
 
 // 隐藏弹窗
 const hideDialog = () => {
-    dialog.visible = false;
+  dialog.visible = false;
 };
 
 // 页面加载完成时执行
@@ -443,6 +453,7 @@ onMounted(() => {
   background-position: center 0;
   background-repeat: no-repeat;
   background-size: cover;
+  background-color: #fdf7f7;
 
   nav {
     position: fixed;
@@ -534,6 +545,7 @@ onMounted(() => {
 
         &.connect {
           background: url("@/assets/web/connect.png") 0 0 no-repeat;
+          background-size: contain;
           width: 193px;
           height: 50px;
           line-height: 50px;
@@ -706,6 +718,7 @@ onMounted(() => {
           position: relative;
           width: 402px;
           height: 80px;
+          margin: 0 auto;
 
           .add {
             position: absolute;
@@ -865,11 +878,12 @@ onMounted(() => {
             overflow: hidden;
 
             .bg-image {
-              background: url("@/assets/web/faq-panel-bg-1.png") 0 0 no-repeat;
+              background: url("@/assets/web/faq-panel-bg-1.png") center 100px
+                no-repeat;
               position: absolute;
               left: 50%;
               transform: translateX(-50%);
-              bottom: -100px;
+              bottom: 0px;
               width: 670px;
               height: 501px;
             }
@@ -949,11 +963,13 @@ onMounted(() => {
                   &.twitter {
                     background: url("@/assets/web/faq-twitter.png") center
                       center no-repeat;
+                    background-size: contain;
                   }
 
                   &.discord {
                     background: url("@/assets/web/faq-discord.png") center
                       center no-repeat;
+                    background-size: contain;
                   }
                 }
               }

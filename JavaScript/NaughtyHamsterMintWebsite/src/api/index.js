@@ -1,10 +1,9 @@
-import request from "@/utils/request"
+import request from "@/utils/request";
 
 // 重大危险源
-export function getTotalSupply (data) {
+export function getTotalSupply() {
   return request({
-    url: "/test",
-    method: "post",
-    data
-  })
+    url: "/getTotalSupply",
+    method: "get",
+  });
 }

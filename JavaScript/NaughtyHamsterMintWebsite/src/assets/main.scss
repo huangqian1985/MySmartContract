@@ -39,6 +39,24 @@ html {
           background-image: linear-gradient(to right, #FDF8F8, #FDF8F8), linear-gradient(to left, #FB9B33, #EA5DFD);
         }
       }
+
+      .text-underline {
+        color: black; /* 文字颜色为黑色 */
+        text-decoration: underline; /* 添加下划线 */
+        text-decoration-color: transparent; /* 隐藏默认下划线颜色 */
+        background-image: linear-gradient(to right, #EA5CFF, #FB9B33); /* 使用渐变色作为   下划线 */
+        background-position: 0 90%; /* 下划线位置在文字底部90%处 */
+        background-size: 100% 10%; /* 下划线高度为文字大小的10% */
+        background-repeat: no-repeat; /* 避免重复 */
+      }
+
+      .el-backtop {
+        --el-backtop-bg-color: #000102;
+        --el-backtop-text-color: #ffffff;
+        --el-backtop-hover-bg-color: #000102;
+      }
+
+
     }
   }
 }
