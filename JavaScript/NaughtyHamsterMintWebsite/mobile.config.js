@@ -6,6 +6,7 @@ import vueJsx from "@vitejs/plugin-vue-jsx";
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
+import postCssPxToRem from "postcss-pxtorem"
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -23,5 +24,15 @@ export default defineConfig({
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
-  }
+  },
+  css: {
+    postcss: {
+      plugins: [
+        postCssPxToRem({
+          rootValue: 42.8, // 1rem的大小
+          propList: ["*"], // 需要转换的属性，这里选择全部都进行转换
+        }),
+      ],
+    },
+  },
 });
