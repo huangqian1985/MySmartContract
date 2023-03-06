@@ -20,7 +20,8 @@ import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
  @title NaughtyHamster NFT
  */
 contract NaughtyHamsterNFT is ERC721Psi, Ownable {
-    mapping(address => uint256) public _numberMinted;
+    mapping(address => uint256) public numberMinted;
+    mapping(address => uint256) public whiteListNumberMinted;
 
     address public withDrawAddr = 0xb67A775281a631fE37B886FBB6F7dA6613BC96F2;
 
@@ -45,7 +46,7 @@ contract NaughtyHamsterNFT is ERC721Psi, Ownable {
         NORMAL
     }
 
-    constructor(uint256 mintMaxSize_) ERC721Psi("Naughty Hamster NFT", "Naughty Hamster") {
+    constructor(uint256 mintMaxSize_) ERC721Psi("Naughty Hamster Group", "Naughty Hamster") {
         MintMaxSize = mintMaxSize_;
     }
 
@@ -75,11 +76,11 @@ contract NaughtyHamsterNFT is ERC721Psi, Ownable {
             revert ReachMaxSupply();
         }
 
-        if (getNumberMinted(msg.sender) + quantity > mintMaxCount) {
+        if (getWhiteListNumberMinted(msg.sender) + quantity > mintMaxCount) {
             revert MintMoreThanAllowed();
         }
 
-        _numberMinted[msg.sender] += quantity;
+        whiteListNumberMinted[msg.sender] += quantity;
         _safeMint(msg.sender, quantity);
     }
 
@@ -100,7 +101,7 @@ contract NaughtyHamsterNFT is ERC721Psi, Ownable {
             revert NeedSendMoreETH();
         }
 
-        _numberMinted[msg.sender] += quantity;
+        numberMinted[msg.sender] += quantity;
         _safeMint(msg.sender, quantity);
     }
 
@@ -108,7 +109,7 @@ contract NaughtyHamsterNFT is ERC721Psi, Ownable {
         if (totalSupply() + quantity > MintMaxSize) {
             revert ReachMaxSupply();
         }
-        _numberMinted[msg.sender] += quantity;
+        numberMinted[msg.sender] += quantity;
         _safeMint(msg.sender, quantity);
     }
 
@@ -117,7 +118,11 @@ contract NaughtyHamsterNFT is ERC721Psi, Ownable {
     }
 
     function getNumberMinted(address minter) public view returns (uint256) {
-        return _numberMinted[minter];
+        return numberMinted[minter];
+    }
+
+    function getWhiteListNumberMinted(address minter) public view returns (uint256) {
+        return whiteListNumberMinted[minter];
     }
 
     function setPublicMintStartTime(uint256 startTime) external onlyOwner {
