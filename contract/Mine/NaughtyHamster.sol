@@ -184,7 +184,7 @@ contract NaughtyHamsterNFT is ERC721Psi, Ownable {
         }
 
         if (!isOpenBoxTime()) {
-            return "ipfs://bafkreifrulkwabinvbwtdxgnmle2we27nrrotukzut7ghb3kdeulqndh7q";
+            return "ipfs://bafkreicbaidoseijitqkca3543bt46ruazwn66wpj4o3hn2z37sxz4fgty";
         }
 
         string memory footerString = ".json";
