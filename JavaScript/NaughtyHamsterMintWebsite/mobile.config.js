@@ -10,6 +10,7 @@ import postCssPxToRem from "postcss-pxtorem"
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: "/mobile/",
   plugins: [
     vue(),
     vueJsx(),

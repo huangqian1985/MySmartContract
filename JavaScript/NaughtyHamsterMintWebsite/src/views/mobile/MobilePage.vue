@@ -35,9 +35,7 @@
         <li><a href="#road-map">Road Map</a></li>
         <li><a href="#faq">FAQ</a></li>
         <li>
-          <a href="https://twitter.com/naughtyDAOweb3" target="_blank"
-            >Twitter</a
-          >
+          <a href="https://twitter.com/naughtyDAOweb3" target="_blank">Twitter</a>
         </li>
         <li>
           <a href="https://discord.gg/ErHRUU5eXd" target="_blank">Discord</a>
@@ -404,6 +402,14 @@ const publicMint = async () => {
 
     if (ethereum) {
       const provider = new ethers.providers.Web3Provider(ethereum, "any");
+
+      let network = await provider.getNetwork()
+      console.log("您当前所连接的以太坊网络为:", network.name, ", chainID:", network.chainId);
+      if (network.name != "goerli") {
+          console.error("请切换正确的以太坊网络！");
+          return
+      }
+      
       const signer = provider.getSigner();
       const mintContract = new ethers.Contract(
         contractAddress,
@@ -1008,6 +1014,7 @@ onMounted(() => {
 
       .footer-logo {
         background: url("@/assets/web/footer-logo.png") center center no-repeat;
+        background-size: contain;
         width: 58px;
         height: 59px;
         margin-bottom: 40px;
@@ -1019,28 +1026,27 @@ onMounted(() => {
         margin-bottom: 40px;
 
         > a {
+          background-position: center center;
+          background-repeat: no-repeat;
+          background-size: contain;
           width: 32px;
           height: 22px;
           margin-right: 27px;
 
           &.footer-youtube {
-            background: url("@/assets/web/footer-youtube.png") center center
-              no-repeat;
+            background-image: url("@/assets/web/footer-youtube.png");
           }
 
           &.footer-instagram {
-            background: url("@/assets/web/footer-instagram.png") center center
-              no-repeat;
+            background-image: url("@/assets/web/footer-instagram.png");
           }
 
           &.footer-twitter {
-            background: url("@/assets/web/footer-twitter.png") center center
-              no-repeat;
+            background-image: url("@/assets/web/footer-twitter.png");
           }
 
           &.footer-discord {
-            background: url("@/assets/web/footer-discord.png") center center
-              no-repeat;
+            background-image: url("@/assets/web/footer-discord.png");
           }
         }
       }

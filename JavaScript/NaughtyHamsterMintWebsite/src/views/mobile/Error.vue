@@ -1,8 +1,7 @@
 <template>
   <section class="main-content">
     <h3>SORRY</h3>
-    <p>At this stage,only whitelisted users can participate in MINT.</p>
-    <p>Official opening date: December 20, 2023</p>
+    <p>Only whitelisted users can participate in MINT.</p>
     <div class="button" href="#" @click="emit('hideDialog')">OK</div>
   </section>
 </template>

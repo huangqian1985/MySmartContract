@@ -15,6 +15,10 @@ const router = createRouter({
       name: "whiteList",
       component: WhiteList,
     },
+    {
+      path: "/:pathMatch(.*)",
+      redirect: "/",
+    },
   ],
 });
 
