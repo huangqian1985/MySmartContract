@@ -132,12 +132,14 @@ func getTotalSupplyFromEthereum() {
 	address := common.HexToAddress(contractAddr)
 	instance, err := naughtyHamster.NewNaughtyHamster(address, client)
 	if err != nil {
-		log.Fatal(err)
+		logger.Errorf(ctx, "get instance err:%s", err)
+		return
 	}
 
 	val, err := instance.TotalSupply(nil)
 	if err != nil {
-		log.Fatal(err)
+		logger.Errorf(ctx, "TotalSupply err:%s", err)
+		return
 	}
 
 	totalSupply = val.Int64()
