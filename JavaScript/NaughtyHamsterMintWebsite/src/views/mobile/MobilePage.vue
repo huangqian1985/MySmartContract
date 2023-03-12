@@ -300,6 +300,7 @@
     <!--  错误    -->
     <DialogError
       v-if="dialog.id === 'error'"
+      :parentData="dialog.parentData"
       @hideDialog="hideDialog"
     ></DialogError>
   </Dialog>
@@ -328,7 +329,7 @@ const totalSupply = ref(1);
 const mintMaxSize = ref(5000);
 
 // Contract Address & ABI
-const contractAddress = "0x0CD057EC2f2D56b0A8d4881022Bf409d1Cc129Ba";
+const contractAddress = "0xe3ed2048558220428611C6de33390cF5EdE7A2f9";
 const contractABI = abi.abi;
 
 // 获取状态
@@ -428,12 +429,16 @@ const publicMint = async () => {
       console.log("publicMint finished!");
     }
   } catch (error) {
-    if (!error.includes("ACTION REJECTED")) {
+    console.log(error);
+
+    var code = error["code"]
+    console.log(code, typeof code)
+
+    if (code == "UNPREDICTABLE_GAS_LIMIT") {
       showDialog({
-        id: "error",
-      });
-    } else {
-      console.log(error);
+        id: "error", 
+        parentData: {text: "NFT is not yet officially available for sale to the public, please wait patiently! "}
+      })
     }
   }
 };

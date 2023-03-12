@@ -1,13 +1,24 @@
 <template>
   <section class="main-content">
     <h3>SORRY</h3>
-    <p>Only whitelisted users can participate in MINT.</p>
+    <p>{{ text }}</p>
     <div class="button" href="#" @click="emit('hideDialog')">OK</div>
   </section>
 </template>
 
 <script setup>
+import { computed } from "vue";
+
 const emit = defineEmits(["hideDialog"]);
+const props = defineProps({
+  parentData: Object,
+});
+
+const text = computed(() => {
+  return props.parentData.text
+    ? props.parentData.text
+    : "Only whitelisted users can participate in MINT.";
+});
 </script>
 
 <style scoped lang="scss">

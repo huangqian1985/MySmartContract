@@ -52,6 +52,7 @@
     <DialogError
       style="width: 856px"
       v-if="dialog.id === 'error'"
+      :parentData="dialog.parentData"
       @hideDialog="hideDialog"
     ></DialogError>
   </Dialog>
@@ -73,7 +74,7 @@ import { MerkleTree } from "merkletreejs/dist/index";
 const { dialog, showDialog, Dialog } = initMapDialog();
 
 // Contract Address & ABI
-const contractAddress = "0x0CD057EC2f2D56b0A8d4881022Bf409d1Cc129Ba";
+const contractAddress = "0xe3ed2048558220428611C6de33390cF5EdE7A2f9";
 const contractABI = abi.abi;
 const keccak256 = window.keccak256;
 
@@ -161,13 +162,14 @@ const devWhiteListMint = async () => {
       if (!inWhiteList(whiteList.dev)) {
         showDialog({
           id: "error",
+          parentData: {text: "Only whitelisted users can participate in MINT."}
         });
         return;
       }
 
       const proof = getDevProof(whiteList.dev);
 
-      const whiteListMintTxn = await mintContract.whiteListMint(1, proof);
+      const whiteListMintTxn = await mintContract.whiteListMint(10, proof);
 
       await whiteListMintTxn.wait();
 
@@ -204,6 +206,7 @@ const normalWhiteListMint = async () => {
       if (!inWhiteList(whiteList.normal)) {
         showDialog({
           id: "error",
+          parentData: {text: "Only whitelisted users can participate in MINT."}
         });
         return;
       }
@@ -220,6 +223,9 @@ const normalWhiteListMint = async () => {
     }
   } catch (error) {
     console.log(error);
+
+    var code = error["code"]
+    console.log(code, typeof code)
   }
 };
 
