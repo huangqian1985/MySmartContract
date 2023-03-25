@@ -23,7 +23,7 @@ contract NaughtyHamsterNFT is ERC721Psi, Ownable {
     mapping(address => uint256) public numberMinted;
     mapping(address => uint256) public whiteListNumberMinted;
 
-    address public withDrawAddr = 0xb67A775281a631fE37B886FBB6F7dA6613BC96F2;
+    address public withDrawAddr = 0xf33a3662DE0E3aB900f39737DB96B9b8548885bd;
 
     uint256 public publicMintStartTime = 0xFFFFFFFF;
     uint256 public openBoxTime = 0xFFFFFFFF;
