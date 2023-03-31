@@ -74,7 +74,7 @@ import { MerkleTree } from "merkletreejs/dist/index";
 const { dialog, showDialog, Dialog } = initMapDialog();
 
 // Contract Address & ABI
-const contractAddress = "0xe3ed2048558220428611C6de33390cF5EdE7A2f9";
+const contractAddress = "0x459028083482ac4c9691ebbcc443a19e9613fd87";
 const contractABI = abi.abi;
 const keccak256 = window.keccak256;
 
@@ -147,7 +147,7 @@ const devWhiteListMint = async () => {
 
       let network = await provider.getNetwork()
       console.log("您当前所连接的以太坊网络为:", network.name, ", chainID:", network.chainId);
-      if (network.name != "goerli") {
+      if (network.chainId != 1) {
           console.error("请切换正确的以太坊网络！");
           return
       }
@@ -191,7 +191,7 @@ const normalWhiteListMint = async () => {
       
       let network = await provider.getNetwork()
       console.log("您当前所连接的以太坊网络为:", network.name, ", chainID:", network.chainId);
-      if (network.name != "goerli") {
+      if (network.chainId != 1) {
           console.error("请切换正确的以太坊网络！");
           return
       }

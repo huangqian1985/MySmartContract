@@ -105,7 +105,7 @@
               v-model="count"
               @input="
                 (e) => {
-                  count = e.target.value.replace(/([^\d]|0)/g, '');
+                  count = e.target.value.replace(/([^\d]|^0)/g, '');
                 }
               "
             />
@@ -259,7 +259,7 @@
                 class="copy"
                 href="#"
                 @click="
-                  copyHandle('0x7a4d1b54dd21dde804c18b7a830b5bc6e586a7f6s')
+                  copyHandle('0x459028083482ac4c9691ebbcc443a19e9613fd87')
                 "
               >
                 COPY
@@ -329,7 +329,7 @@ const totalSupply = ref(1);
 const mintMaxSize = ref(5000);
 
 // Contract Address & ABI
-const contractAddress = "0xe3ed2048558220428611C6de33390cF5EdE7A2f9";
+const contractAddress = "0x459028083482ac4c9691ebbcc443a19e9613fd87";
 const contractABI = abi.abi;
 
 // 获取状态
@@ -406,7 +406,7 @@ const publicMint = async () => {
 
       let network = await provider.getNetwork()
       console.log("您当前所连接的以太坊网络为:", network.name, ", chainID:", network.chainId);
-      if (network.name != "goerli") {
+      if (network.chainId != 1) {
           console.error("请切换正确的以太坊网络！");
           return
       }
@@ -434,10 +434,24 @@ const publicMint = async () => {
     var code = error["code"]
     console.log(code, typeof code)
 
-    if (code == "UNPREDICTABLE_GAS_LIMIT") {
+    let errorMsg = ""
+    switch (code) {
+      case "UNPREDICTABLE_GAS_LIMIT":
+        errorMsg = "NFT is not yet officially available for sale to the public, please wait patiently! ";
+        break;
+
+      case "INSUFFICIENT_FUNDS":
+        errorMsg = "Your wallet address does not have enough tokens to perform MINT."
+        break;
+    
+      default:
+        break;
+    }
+
+    if (errorMsg.length > 0) {
       showDialog({
         id: "error", 
-        parentData: {text: "NFT is not yet officially available for sale to the public, please wait patiently! "}
+        parentData: {text: errorMsg}
       })
     }
   }
