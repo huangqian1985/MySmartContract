@@ -26,6 +26,7 @@ npm run dev
 
 ```sh
 npm run build
+npm run build-mobile
 ```
 
 ### Lint with [ESLint](https://eslint.org/)

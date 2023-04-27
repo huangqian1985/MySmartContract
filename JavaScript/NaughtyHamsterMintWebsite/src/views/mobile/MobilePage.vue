@@ -38,7 +38,7 @@
           <a href="https://twitter.com/naughtyDAOweb3" target="_blank">Twitter</a>
         </li>
         <li>
-          <a href="https://discord.gg/ErHRUU5eXd" target="_blank">Discord</a>
+          <a href="https://discord.gg/wZZZC8CFhb" target="_blank">Discord</a>
         </li>
       </ul>
     </nav>
@@ -231,7 +231,7 @@
                   target="_blank"
                 ></a>
                 <a
-                  href="https://discord.gg/ErHRUU5eXd"
+                  href="https://discord.gg/wZZZC8CFhb"
                   class="discord"
                   target="_blank"
                 ></a>
@@ -282,7 +282,7 @@
           ></a>
           <a
             class="footer-discord"
-            href="https://discord.gg/ErHRUU5eXd"
+            href="https://discord.gg/wZZZC8CFhb"
             target="_blank"
           ></a>
         </div>
