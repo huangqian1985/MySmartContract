@@ -4,6 +4,8 @@ const keccak256 = require('keccak256')
 
 const whiteList = require('./whiteList.json');
 
+// cmd : node loadWhiteList.js
+
 gen(whiteList.dev, "./devWhiteListProof.json");
 gen(whiteList.normal, "./normalWhiteListProof.json");
 
