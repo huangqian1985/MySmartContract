@@ -41,6 +41,12 @@ func main() {
 
 	startTimer()
 
+	NewNFTIPFS().start()
+
+	startHttpServer()
+}
+
+func startHttpServer() {
 	s := g.Server()
 	s.Group("", func(group *ghttp.RouterGroup) {
 		//
