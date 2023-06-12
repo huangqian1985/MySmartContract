@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/net/gclient"
 	"github.com/gogf/gf/v2/os/glog"
 	"io"
 	"strings"
@@ -47,13 +48,37 @@ func (n *NFTIPFS) start() {
 	go n.qryResult()
 }
 
+func (n *NFTIPFS) sendGetRequest(client *gclient.Client, requestURL string) (resp *gclient.Response, err error) {
+	var retryCount int
+	const maxRetryCount = 100
+	for {
+		if retryCount > maxRetryCount {
+			break
+		}
+		resp, err = client.Get(ctx, requestURL)
+		if err != nil {
+			n.logger.Errorf(ctx, "client.Get URL:%s, err:%s, retryCount:%d", requestURL, err, retryCount)
+			retryCount++
+			time.Sleep(time.Minute * time.Duration(retryCount))
+			continue
+		}
+		return resp, nil
+	}
+	return nil, err
+}
+
 func (n *NFTIPFS) qryResult() {
+	var beginIndex int
+	if val, err := g.Config().Get(ctx, "ethereum.beginIndex"); err == nil {
+		beginIndex = val.Int()
+	}
+
 	client := g.Client()
 	for {
 		// 0~4999循环访问
-		for i := 0; i < 5000; i++ {
+		for i := beginIndex; i < 5000; i++ {
 			begin := time.Now().UnixMilli()
-			resp, err := client.Get(ctx, fmt.Sprintf(metaJsonURL, i))
+			resp, err := n.sendGetRequest(client, fmt.Sprintf(metaJsonURL, i))
 			jsonCost := time.Now().UnixMilli() - begin
 			if err != nil {
 				n.logger.Errorf(ctx, "client.Get json err:%s", err)
@@ -77,7 +102,7 @@ func (n *NFTIPFS) qryResult() {
 			pngFileName := string(pngByte[index+1:])
 
 			begin = time.Now().UnixMilli()
-			_, err = client.Get(ctx, fmt.Sprintf(pngURL, pngFileName))
+			_, err = n.sendGetRequest(client, fmt.Sprintf(pngURL, pngFileName))
 			pngCost := time.Now().UnixMilli() - begin
 			if err != nil {
 				n.logger.Errorf(ctx, "client.Get png err:%s", err)
@@ -89,6 +114,7 @@ func (n *NFTIPFS) qryResult() {
 			time.Sleep(time.Minute)
 		}
 		n.logger.Errorf(ctx, "完成一次完整5000条IPFS数据获取, 24小时后重新执行")
+		beginIndex = 0
 		time.Sleep(time.Hour * 24)
 	}
 }

@@ -1,6 +1,7 @@
 [ethereum]
     serverPort = 9999
-    rpcURL = "https://eth-goerli.g.alchemy.com/v2/Yy5Huxu5D7mM0_BigYQzKoiPVCxBw69p"
+    rpcURL = "https://eth-mainnet.g.alchemy.com/v2/BrMLCM-FKjsQi0anbthKgECWYtPJ7mPY"
     contractAddr = "0x459028083482ac4c9691ebbcc443a19e9613fd87"
-    cryFile = "/www/server/panel/vhost/letsencrypt/www.naughtygr.com/fullchain.pem"
-    keyFile = "/www/server/panel/vhost/letsencrypt/www.naughtygr.com/privkey.pem"
+    cryFile = "./fullchain.pem"
+    keyFile = "./privkey.pem"
+    beginIndex = 4000
