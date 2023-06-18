@@ -90,6 +90,10 @@ func (n *NFTIPFS) qryResult() {
 				n.logger.Errorf(ctx, "io.ReadAll err:%s", err)
 				continue
 			}
+			if err = resp.Body.Close(); err != nil {
+				n.logger.Errorf(ctx, "resp.Body.Close err:%s", err)
+				continue
+			}
 			var jsonData MetaJsonData
 			err = json.Unmarshal(body, &jsonData)
 			if err != nil {
