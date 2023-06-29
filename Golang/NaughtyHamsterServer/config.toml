@@ -4,4 +4,5 @@
     contractAddr = "0x459028083482ac4c9691ebbcc443a19e9613fd87"
     cryFile = "./fullchain.pem"
     keyFile = "./privkey.pem"
-    beginIndex = 4000
+    beginIndex = 0
+    ipfs = true

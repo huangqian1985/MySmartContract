@@ -27,6 +27,7 @@ var (
 	crtFile, keyFile     string
 	serverPort           int
 	totalSupply          int64
+	ipfs                 bool
 )
 
 func main() {
@@ -41,7 +42,9 @@ func main() {
 
 	startTimer()
 
-	NewNFTIPFS().start()
+	if ipfs {
+		NewNFTIPFS().start()
+	}
 
 	startHttpServer()
 }
@@ -95,6 +98,12 @@ func initConfig() error {
 		return err
 	} else {
 		keyFile = val.String()
+	}
+
+	if val, err := g.Config().Get(ctx, "ethereum.ipfs"); err != nil {
+		return err
+	} else {
+		ipfs = val.Bool()
 	}
 
 	logger.Debug(ctx, "initConfig finish")
