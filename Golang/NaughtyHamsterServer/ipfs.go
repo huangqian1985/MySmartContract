@@ -106,10 +106,14 @@ func (n *NFTIPFS) qryResult() {
 			pngFileName := string(pngByte[index+1:])
 
 			begin = time.Now().UnixMilli()
-			_, err = n.sendGetRequest(client, fmt.Sprintf(pngURL, pngFileName))
+			resp, err = n.sendGetRequest(client, fmt.Sprintf(pngURL, pngFileName))
 			pngCost := time.Now().UnixMilli() - begin
 			if err != nil {
 				n.logger.Errorf(ctx, "client.Get png err:%s", err)
+				continue
+			}
+			if err = resp.Body.Close(); err != nil {
+				n.logger.Errorf(ctx, "resp.Body.Close err:%s", err)
 				continue
 			}
 
