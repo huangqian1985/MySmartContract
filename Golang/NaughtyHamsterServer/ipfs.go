@@ -78,7 +78,8 @@ func (n *NFTIPFS) qryResult() {
 		// 0~4999循环访问
 		for i := beginIndex; i < 5000; i++ {
 			begin := time.Now().UnixMilli()
-			resp, err := n.sendGetRequest(client, fmt.Sprintf(metaJsonURL, i))
+			requestURL := fmt.Sprintf(metaJsonURL, i)
+			resp, err := n.sendGetRequest(client, requestURL)
 			jsonCost := time.Now().UnixMilli() - begin
 			if err != nil {
 				n.logger.Errorf(ctx, "client.Get json err:%s", err)
@@ -97,7 +98,7 @@ func (n *NFTIPFS) qryResult() {
 			var jsonData MetaJsonData
 			err = json.Unmarshal(body, &jsonData)
 			if err != nil {
-				n.logger.Errorf(ctx, "json.Unmarshal err:%s", err)
+				n.logger.Errorf(ctx, "json.Unmarshal requestURL:%s, err:%s, body:%s", requestURL, err, string(body))
 				continue
 			}
 			//
