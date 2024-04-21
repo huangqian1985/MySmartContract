@@ -1,5 +1,6 @@
 # MySmartContract
 
-The term "Web3 project" is relatively new and there is no one definitive translation. However, the translation provided above is a good starting point.
-The term "basic libraries" is also somewhat vague. However, the examples provided above should give you a good idea of the types of libraries that are typically included in Web3 projects.
-The term "business reference code" is more specific. However, it is still important to note that the code provided in these examples is just that - examples. You will need to adapt the code to meet the specific needs of your project.
+The term "Web3 project" is relatively new and lacks a universally accepted translation. However, the provided translation above serves as a solid starting point. 
+The term "basic libraries" may be considered somewhat ambiguous; nevertheless, the aforementioned examples offer a comprehensive overview of the typical libraries included in Web3 projects. 
+On the other hand, the term "business reference code" carries more specificity; nonetheless, it is crucial to acknowledge that the code presented in these examples merely serves as illustrations. 
+It will be necessary for you to customize and adapt the code according to your project's specific requirements.
